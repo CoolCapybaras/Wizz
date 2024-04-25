@@ -3601,6 +3601,7 @@ GameObject:
   - component: {fileID: 281521301}
   - component: {fileID: 281521300}
   - component: {fileID: 281521299}
+  - component: {fileID: 281521303}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3693,6 +3694,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &281521303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db43acd60c60fe42abeb129295f924d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Hostname: localhost
+  Port: 8887
 --- !u!1 &281667578
 GameObject:
   m_ObjectHideFlags: 0
@@ -5013,6 +5028,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4648530514105884738, guid: da81cf26658459742adccfc2e8ad3ce8, type: 3}
   m_PrefabInstance: {fileID: 431210263}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &431741896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 448871919247203123, guid: da81cf26658459742adccfc2e8ad3ce8, type: 3}
+  m_PrefabInstance: {fileID: 431210263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &435906708
 GameObject:
   m_ObjectHideFlags: 0
@@ -7381,7 +7407,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 553166064}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1820997793}
+        m_TargetAssemblyTypeName: LoginForm, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &553166064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10324,7 +10362,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 1708.38}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &829854161
 MonoBehaviour:
@@ -13091,7 +13129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1020321583
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14753,7 +14791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2880679609254069156, guid: 5c3f7535a4fd79046bf00c004d1efcc4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -48
       objectReference: {fileID: 0}
     - target: {fileID: 2880679609254069156, guid: 5c3f7535a4fd79046bf00c004d1efcc4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -21154,7 +21192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2880679609254069156, guid: 5c3f7535a4fd79046bf00c004d1efcc4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -96
       objectReference: {fileID: 0}
     - target: {fileID: 2880679609254069156, guid: 5c3f7535a4fd79046bf00c004d1efcc4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -21321,13 +21359,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1820997792}
+  - component: {fileID: 1820997793}
   m_Layer: 5
   m_Name: Login Form
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1820997792
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21352,6 +21391,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1820997793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820997791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67bba08ea015430429fa838fef030511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 431741896}
 --- !u!1 &1824443882
 GameObject:
   m_ObjectHideFlags: 0
