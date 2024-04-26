@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Net.Packets.Clientbound
 {
-	public class AuthSuccessPacket : IPacket
+    public class AuthSuccessPacket : IPacket
 	{
 		public int Id => 11;
 

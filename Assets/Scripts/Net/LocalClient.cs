@@ -52,7 +52,7 @@ public class LocalClient : MonoBehaviour
 		}
 		catch (Exception e)
 		{
-			Debug.LogException(e);
+			Debug.LogException(e);	
 		}
 
 		Debug.Log("Shutting down...");

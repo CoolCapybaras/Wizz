@@ -20,6 +20,8 @@ public class Lobby : MonoBehaviour, IForm
         public Transform playersLayout;
         public GameObject playerPrefab;
 
+        public GameObject startGameButton;
+
         public QuizUI quizCard;
     }
 
@@ -49,16 +51,19 @@ public class Lobby : MonoBehaviour, IForm
     {
         RemovePlayersFromLayout();
         var players = gameManager.currentClients;
-        for (int i = 0; i < players.Count; ++i)
+        foreach (var player in players)
         {
             var obj = Instantiate(form.playerPrefab, form.playersLayout);
-            obj.GetComponent<RawImage>().texture = players[i].Image;
-            obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[i].Name;
+            obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = player.Name;
+            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image;
         }
     }
 
     public void InitializeForm()
     {
+        if (gameManager.currentClients.Count != 1)
+            form.startGameButton.SetActive(false);
+
         form.quizNameText.text = $"Лобби \"{gameManager.currentQuiz.Name}\"";
         form.lobbyCodeText.text = $"Код доступа: #{gameManager.currentLobbyId}";
         form.quizDescriptionText.text = gameManager.currentQuiz.Description;

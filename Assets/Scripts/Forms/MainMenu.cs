@@ -30,6 +30,11 @@ public class MainMenu : MonoBehaviour, IForm
         FormManager.Instance.ChangeForm("joinlobby");
     }
 
+    public void OnNewGamePressed()
+    {
+        FormManager.Instance.ChangeForm("myquizzes");
+    }
+
     public void InitializeForm()
     {
         form.topGreetingText.text = $"Пора создавать новое, {localClient.Name}!";
