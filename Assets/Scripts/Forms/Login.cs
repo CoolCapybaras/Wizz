@@ -2,7 +2,7 @@ using Net.Packets.Serverbound;
 using TMPro;
 using UnityEngine;
 
-public class LoginForm : MonoBehaviour
+public class Login : MonoBehaviour, IForm
 {
 	public TMP_InputField inputField;
 
@@ -46,4 +46,8 @@ public class LoginForm : MonoBehaviour
 
 		counter++;
 	}
+
+    public void InitializeForm()
+    {
+    }
 }

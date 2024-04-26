@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using WizzServer.Models;
 
@@ -92,6 +93,13 @@ namespace Net.Packets.Clientbound
 		public ValueTask HandleAsync(LocalClient client)
 		{
 			Debug.Log($"LobbyJoined: {LobbyId}");
+
+			var gameManager = GameManager.Instance;
+			gameManager.currentLobbyId = LobbyId;
+            gameManager.currentQuiz = Quiz;
+            gameManager.currentClients = Clients.ToList();
+
+			FormManager.Instance.ChangeForm("lobby");
 			return IPacket.CompletedTask;
 		}
 	}

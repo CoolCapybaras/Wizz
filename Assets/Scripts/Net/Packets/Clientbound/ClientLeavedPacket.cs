@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using UnityEditor.PackageManager;
 
 namespace Net.Packets.Clientbound
 {
@@ -53,7 +55,10 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
-		}
+			var currentClients = GameManager.Instance.currentClients;
+            currentClients.Remove(currentClients.Where(c => c.Id == ClientId).First());
+			Lobby.Instance.OnClientsListChanged();
+            return IPacket.CompletedTask;
+        }
 	}
 }
