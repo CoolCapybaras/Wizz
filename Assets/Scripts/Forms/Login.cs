@@ -1,53 +1,46 @@
+using Net.Packets.Clientbound;
 using Net.Packets.Serverbound;
+using System.Xml.Linq;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Login : MonoBehaviour, IForm
 {
+    public static Login Instance;
     public TMP_InputField inputField;
 
     private LocalClient localClient;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        Instance = this;
         localClient = LocalClient.instance;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnAnonLoginPressed()
     {
-
+        localClient.SendPacket(new AuthPacket()
+        {
+            Type = 0,
+            Name = inputField.text
+        });
     }
 
-    int counter = 0;
-
-    public void OnClick()
+    public void OnLoginSuccess(AuthSuccessPacket packet)
     {
-        if (counter == 0)
-        {
-            localClient.SendPacket(new AuthPacket()
-            {
-                Type = 0,
-                Name = inputField.text
-            });
-        }
-        else if (counter == 1)
-        {
-            localClient.SendPacket(new CreateLobbyPacket()
-            {
-                QuizId = "philosophy"
-            });
-        }
-        else if (counter == 2)
-        {
-            localClient.SendPacket(new StartGamePacket());
-        }
+        Debug.Log($"{packet.ClientId} {packet.Name}");
+        LocalClient.instance.Name = packet.Name;
+        LocalClient.instance.Id = packet.Id;
+        LocalClient.instance.Authorized = true;
+        FormManager.Instance.ChangeForm("mainmenu");
 
-        counter++;
+        OverlayManager.Instance.SetActiveBottomButtons(true);
+        OverlayManager.Instance.SetActiveTopButtons(true);
     }
 
     public void InitializeForm()
     {
+        inputField.text = string.Empty;
     }
 }

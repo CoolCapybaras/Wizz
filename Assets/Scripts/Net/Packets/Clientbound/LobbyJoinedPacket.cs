@@ -92,14 +92,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			Debug.Log($"LobbyJoined: {LobbyId}");
-
-			var gameManager = GameManager.Instance;
-			gameManager.currentLobbyId = LobbyId;
-            gameManager.currentQuiz = Quiz;
-            gameManager.currentClients = Clients.ToList();
-
-			FormManager.Instance.ChangeForm("lobby");
+			Lobby.Instance.OnLobbyJoined(this);
 			return IPacket.CompletedTask;
 		}
 	}

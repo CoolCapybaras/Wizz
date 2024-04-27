@@ -9,8 +9,15 @@ public class FormManager : MonoBehaviour
 
     private void Awake()
     {
-        activeForm = GetFormById("login");
+        WarmupForms();
+        ChangeForm("login");
         Instance = this;
+    }
+
+    private void Start()
+    {
+        OverlayManager.Instance.SetActiveBottomButtons(false);
+        OverlayManager.Instance.SetActiveTopButtons(false);
     }
 
     public List<Form> forms;
@@ -18,10 +25,21 @@ public class FormManager : MonoBehaviour
 
     public void ChangeForm(string id)
     {
-        activeForm.Obj.SetActive(false);
+        if (activeForm != null)
+            activeForm.Obj.SetActive(false);
+
         activeForm = GetFormById(id);
         activeForm.Obj.SetActive(true);
         activeForm.Obj.GetComponent<IForm>().InitializeForm();
+    }
+
+    public void WarmupForms()
+    {
+        foreach (var form in forms)
+        {
+            form.Obj.SetActive(true);
+            form.Obj.SetActive(false);
+        }
     }
 
     public Form GetFormById(string id) => forms.Where(f => f.Id == id).First();

@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using Net.Packets.Clientbound;
+using UnityEditor.PackageManager;
+using System.Linq;
 
 public class Lobby : MonoBehaviour, IForm
 {
@@ -73,5 +76,29 @@ public class Lobby : MonoBehaviour, IForm
         form.quizCard.description.text = gameManager.currentQuiz.Description;
         form.quizCard.image.texture = gameManager.currentQuiz.Image;
         // TODO: form.quizCard.hashtags заполнить
+    }
+
+    public void OnClientJoined(ClientJoinedPacket packet)
+    {
+        GameManager.Instance.currentClients.Add(packet.Client);
+        OnClientsListChanged();
+    }
+
+    public void OnClientLeaved(ClientLeavedPacket packet)
+    {
+        var currentClients = GameManager.Instance.currentClients;
+        currentClients.Remove(currentClients.Where(c => c.Id == packet.ClientId).First());
+        OnClientsListChanged();
+    }
+
+    public void OnLobbyJoined(LobbyJoinedPacket packet)
+    {
+        Debug.Log($"LobbyJoined: {packet.LobbyId}");
+
+        var gameManager = GameManager.Instance;
+        gameManager.currentLobbyId = packet.LobbyId;
+        gameManager.currentQuiz = packet.Quiz;
+        gameManager.currentClients = packet.Clients.ToList();
+        FormManager.Instance.ChangeForm("lobby");
     }
 }

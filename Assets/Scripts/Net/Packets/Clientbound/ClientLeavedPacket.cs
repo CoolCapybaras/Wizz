@@ -54,9 +54,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			var currentClients = GameManager.Instance.currentClients;
-            currentClients.Remove(currentClients.Where(c => c.Id == ClientId).First());
-			Lobby.Instance.OnClientsListChanged();
+			Lobby.Instance.OnClientLeaved(this);
             return IPacket.CompletedTask;
         }
 	}

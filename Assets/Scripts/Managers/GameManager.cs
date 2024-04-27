@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     public int currentLobbyId;
     public Quiz currentQuiz;
-    public List<ClientDTO> currentClients;
+    public List<ClientDTO> currentClients = new();
 
     private void Awake()
     {

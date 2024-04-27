@@ -60,10 +60,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			Debug.Log($"{ClientId} {Name}");
-			LocalClient.instance.Name = Name;
-			LocalClient.instance.Id = Id;
-			FormManager.Instance.ChangeForm("mainmenu");
+			Login.Instance.OnLoginSuccess(this);
 			return IPacket.CompletedTask;
 		}
 	}

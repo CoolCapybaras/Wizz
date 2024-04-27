@@ -75,8 +75,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			MyQuizzes.Instance.quizzes = Quizzes.ToList();
-			MyQuizzes.Instance.InstantiateQuizzes();
+			MyQuizzes.Instance.OnSearchResult(this);
 			return IPacket.CompletedTask;
 		}
 	}

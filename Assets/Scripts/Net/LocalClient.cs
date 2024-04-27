@@ -20,6 +20,7 @@ public class LocalClient : MonoBehaviour
 	public int Id { get; set; }
 	public string Name { get; set; }
 	public Texture2D Image { get; set; }
+	public bool Authorized { get; set; }
 
 	private ConcurrentQueue<IPacket> packetQueue = new();
 

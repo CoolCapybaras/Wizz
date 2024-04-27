@@ -1,8 +1,11 @@
+using Net.Packets.Clientbound;
 using Net.Packets.Serverbound;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -67,5 +70,11 @@ public class MyQuizzes : MonoBehaviour, IForm
     {
         RemoveQuizzesFromLayout();
         OnSearchEndEdit(string.Empty);
+    }
+
+    public void OnSearchResult(SearchResultPacket packet)
+    {
+        quizzes = packet.Quizzes.ToList();
+        InstantiateQuizzes();
     }
 }
