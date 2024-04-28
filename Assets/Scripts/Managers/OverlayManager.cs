@@ -1,3 +1,4 @@
+using Net.Packets.Serverbound;
 using Ookii.Dialogs;
 using System;
 using System.Collections;
@@ -57,7 +58,8 @@ public class OverlayManager : MonoBehaviour
 
     public void OnMainMenuPressed()
     {
-        // TODO: отключать игрока от всех лобби и игр
+        GameManager.Instance.EnsureLeavedLobby();
+
         FormManager.Instance.ChangeForm("mainmenu");
     }
 }

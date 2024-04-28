@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Net.Packets.Clientbound;
 using UnityEditor.PackageManager;
 using System.Linq;
+using Net.Packets.Serverbound;
 
 public class Lobby : MonoBehaviour, IForm
 {
@@ -99,6 +100,17 @@ public class Lobby : MonoBehaviour, IForm
         gameManager.currentLobbyId = packet.LobbyId;
         gameManager.currentQuiz = packet.Quiz;
         gameManager.currentClients = packet.Clients.ToList();
+        gameManager.isInLobby = true;
         FormManager.Instance.ChangeForm("lobby");
+    }
+
+    public void OnGameStartPressed()
+    {
+        LocalClient.instance.SendPacket(new StartGamePacket());
+    }
+
+    public void OnGameStarted(GameStartedPacket packet)
+    {
+        FormManager.Instance.ChangeForm("quizloading");
     }
 }

@@ -1,3 +1,4 @@
+using Net.Packets.Serverbound;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,18 @@ public class GameManager : MonoBehaviour
     public Quiz currentQuiz;
     public List<ClientDTO> currentClients = new();
 
+    public QuizQuestion currentQuestion;
+    public int currentQuestionCount;
+
+    public bool isInLobby;
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void EnsureLeavedLobby()
+    {
+        if (isInLobby)
+            LocalClient.instance.SendPacket(new LeaveLobbyPacket());
     }
 }
