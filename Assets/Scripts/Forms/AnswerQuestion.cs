@@ -3,6 +3,7 @@ using Net.Packets.Serverbound;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -97,5 +98,14 @@ public class AnswerQuestion : MonoBehaviour, IForm
             else
                 button.obj.GetComponent<Image>().color = form.wrongAnswerColor;
         }
+    }
+
+    public void OnRoundEnded(RoundEndedPacket packet)
+    {
+        gameManager.CurrentScore = packet.Score;
+        gameManager.CurrentScore = gameManager.CurrentScore
+            .OrderBy(x => x.Value)
+            .ToDictionary(x => x.Key, x => x.Value);
+        FormManager.Instance.ChangeForm("rating");
     }
 }

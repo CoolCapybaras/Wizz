@@ -2,7 +2,6 @@ using Net.Packets.Clientbound;
 using Net.Packets.Serverbound;
 using System.Xml.Linq;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Login : MonoBehaviour, IForm

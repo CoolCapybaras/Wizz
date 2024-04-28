@@ -1,6 +1,7 @@
 using Net.Packets.Serverbound;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using WizzServer.Models;
 
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int currentLobbyId;
     public Quiz currentQuiz;
     public List<ClientDTO> currentClients = new();
+    public Dictionary<int, int> CurrentScore = new();
 
     public QuizQuestion currentQuestion;
     public int currentQuestionCount;
@@ -26,4 +28,7 @@ public class GameManager : MonoBehaviour
         if (isInLobby)
             LocalClient.instance.SendPacket(new LeaveLobbyPacket());
     }
+
+    public ClientDTO GetClientById(int id) => currentClients.First(x => x.Id == id);
+    
 }

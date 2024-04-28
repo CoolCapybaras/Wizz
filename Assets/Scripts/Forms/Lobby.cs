@@ -5,7 +5,6 @@ using TMPro;
 using System;
 using UnityEngine.UI;
 using Net.Packets.Clientbound;
-using UnityEditor.PackageManager;
 using System.Linq;
 using Net.Packets.Serverbound;
 
