@@ -3,13 +3,35 @@ using System.Threading.Tasks;
 
 namespace Net.Packets.Serverbound
 {
+	public enum AuthType
+	{
+		Anonymous,
+		Token,
+		VK,
+		Telegram
+	}
+
 	public class AuthPacket : IPacket
 	{
 		public int Id => 2;
 
-		public int Type { get; set; }
+		public AuthType Type { get; set; }
 		public string Name { get; set; }
 		public string Token { get; set; }
+
+		public AuthPacket()
+		{
+
+		}
+
+		public AuthPacket(AuthType type, string data)
+		{
+			Type = type;
+			if (type == AuthType.Anonymous)
+				Name = data!;
+			else if (type == AuthType.Token)
+				Token = data!;
+		}
 
 		public static AuthPacket Deserialize(byte[] data)
 		{
@@ -27,31 +49,21 @@ namespace Net.Packets.Serverbound
 
 		public void Populate(WizzStream stream)
 		{
-			Type = stream.ReadVarInt();
-			if (Type == 0)
-			{
+			Type = (AuthType)stream.ReadVarInt();
+			if (Type == AuthType.Anonymous)
 				Name = stream.ReadString();
-				Token = string.Empty;
-			}
-			else
-			{
+			else if (Type == AuthType.Token)
 				Token = stream.ReadString();
-				Name = string.Empty;
-			}
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
 			packetStream.WriteVarInt(Type);
-			if (Type == 0)
-			{
+			if (Type == AuthType.Anonymous)
 				packetStream.WriteString(Name);
-			}
-			else
-			{
+			else if (Type == AuthType.Token)
 				packetStream.WriteString(Token);
-			}
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);

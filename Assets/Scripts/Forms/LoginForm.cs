@@ -26,11 +26,7 @@ public class LoginForm : MonoBehaviour
 	{
 		if (counter == 0)
 		{
-			localClient.SendPacket(new AuthPacket()
-			{
-				Type = 0,
-				Name = inputField.text
-			});
+			localClient.SendPacket(new AuthPacket(AuthType.Telegram, null));
 		}
 		else if (counter == 1)
 		{

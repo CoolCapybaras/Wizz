@@ -19,7 +19,7 @@ public class LocalClient : MonoBehaviour
 
 	public int Id { get; set; }
 	public string Name { get; set; }
-	public Texture2D Image { get; set; }
+	public Image Image { get; set; }
 
 	private ConcurrentQueue<IPacket> packetQueue = new();
 
@@ -80,7 +80,7 @@ public class LocalClient : MonoBehaviour
 					packetQueue.Enqueue(MessagePacket.Deserialize(data));
 					break;
 				case 11:
-					packetQueue.Enqueue(AuthSuccessPacket.Deserialize(data));
+					packetQueue.Enqueue(AuthResultPacket.Deserialize(data));
 					break;
 				case 12:
 					packetQueue.Enqueue(SearchResultPacket.Deserialize(data));
