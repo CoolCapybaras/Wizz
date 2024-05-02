@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
@@ -74,7 +75,8 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
+			MyQuizzes.Instance.OnSearchResult(this);
+			return IPacket.CompletedTask;
 		}
 	}
 }

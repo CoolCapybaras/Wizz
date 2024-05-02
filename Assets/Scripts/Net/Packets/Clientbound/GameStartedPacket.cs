@@ -53,7 +53,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			Debug.Log($"GameStarted: {QuizName}");
+			Lobby.Instance.OnGameStarted(this);
 			return IPacket.CompletedTask;
 		}
 	}
