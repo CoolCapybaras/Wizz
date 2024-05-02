@@ -23,6 +23,8 @@ public class EndGame : MonoBehaviour, IForm
         public GameObject[] pedestals;
         public Transform scoresLayout;
         public GameObject scorePrefab;
+
+        public ParticleSystem[] particles;
     }
     
     
@@ -79,5 +81,10 @@ public class EndGame : MonoBehaviour, IForm
             InstantiateScores();
         else
             RemoveScoresFromScroll();
+
+        foreach(var particle in form.particles)
+        {
+            particle.Play();
+        }
     }
 }
