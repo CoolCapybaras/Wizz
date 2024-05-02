@@ -249,7 +249,7 @@ public partial class WizzStream
 		BaseStream.Write(values);
 	}
 
-	public void WriteImage(Image image)
+	public void WriteImage(ByteImage image)
 	{
 		throw new NotImplementedException();
 	}

@@ -44,7 +44,7 @@ public class Rating : MonoBehaviour, IForm
             var obj = form.PlayerPrefabs[i];
             obj.SetActive(true);
             obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"{i + 1}";
-            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image;
+            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image.GetTexture();
             obj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = player.Name;
             obj.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
         }

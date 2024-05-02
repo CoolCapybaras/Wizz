@@ -53,7 +53,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
     {
         var question = gameManager.currentQuestion;
         form.questionText.text = question.Question;
-        form.questionImage.texture = question.Image;
+        form.questionImage.texture = question.Image.GetTexture();
         
         for (int i = 0; i < form.answerButtons.Length; i++)
         {

@@ -49,7 +49,7 @@ public class QuizQuestionForm : MonoBehaviour, IForm
     {
         var question = gameManager.currentQuestion;
         form.questionText.text = question.Question;
-        form.questionImage.texture = question.Image;
+        form.questionImage.texture = question.Image.GetTexture();
         form.questionsCount.text = $"Вопрос {gameManager.currentQuestionCount} из {gameManager.currentQuiz.QuestionsCount}";
 
         time = 0;
@@ -59,7 +59,7 @@ public class QuizQuestionForm : MonoBehaviour, IForm
     public void OnRoundStarted(RoundStartedPacket packet)
     {
         ++gameManager.currentQuestionCount;
-        gameManager.currentQuestion = packet.question;
+        gameManager.currentQuestion = packet.Question;
         FormManager.Instance.ChangeForm("quizquestion");
     }
 
