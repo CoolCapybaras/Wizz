@@ -64,8 +64,8 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			GameManager.Instance.isInLobby = false;
-			throw new NotImplementedException();
+			AnswerQuestion.Instance.OnGameEnded(this);
+			return IPacket.CompletedTask;
 		}
 	}
 }

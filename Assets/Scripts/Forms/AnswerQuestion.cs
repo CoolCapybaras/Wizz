@@ -99,6 +99,16 @@ public class AnswerQuestion : MonoBehaviour, IForm
                 button.obj.GetComponent<Image>().color = form.wrongAnswerColor;
         }
     }
+    
+    public void OnGameEnded(GameEndedPacket packet)
+    {
+        gameManager.CurrentScore = packet.Score;
+        gameManager.CurrentScore = gameManager.CurrentScore
+            .OrderBy(x => x.Value)
+            .ToDictionary(x => x.Key, x => x.Value);
+        gameManager.isInLobby = false;
+        FormManager.Instance.ChangeForm("endgame");
+    }
 
     public void OnRoundEnded(RoundEndedPacket packet)
     {
