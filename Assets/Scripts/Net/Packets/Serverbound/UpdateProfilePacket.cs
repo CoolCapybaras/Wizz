@@ -13,7 +13,7 @@ namespace Net.Packets.Serverbound
 
 		public int Type { get; set; }
 		public string Name { get; set; }
-		public Texture2D Image { get; set; }
+		public Image Image { get; set; }
 
 		public static UpdateProfilePacket Deserialize(byte[] data)
 		{

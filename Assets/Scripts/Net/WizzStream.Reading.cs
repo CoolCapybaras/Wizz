@@ -283,7 +283,7 @@ public partial class WizzStream
 		return ReadUInt8Array(length);
 	}
 
-	public Texture2D ReadImage()
+	public Image ReadImage()
 	{
 		var length = ReadVarInt();
 		if (length == 0)
@@ -291,10 +291,6 @@ public partial class WizzStream
 
 		var buffer = new byte[length];
 		this.Read(buffer);
-
-		var texture = new Texture2D(2, 2);
-		texture.LoadImage(buffer);
-
-		return texture;
+		return new Image(buffer);
 	}
 }

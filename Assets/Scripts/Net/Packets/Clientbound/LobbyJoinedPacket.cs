@@ -22,7 +22,7 @@ namespace Net.Packets.Clientbound
 		{
 			this.LobbyId = lobbyId;
 			this.Quiz = quiz;
-			Clients = clients;
+			this.Clients = clients;
 		}
 
 		public static LobbyJoinedPacket Deserialize(byte[] data)

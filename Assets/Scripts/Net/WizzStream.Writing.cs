@@ -249,7 +249,7 @@ public partial class WizzStream
 		BaseStream.Write(values);
 	}
 
-	public Texture2D WriteImage(Texture2D image)
+	public void WriteImage(Image image)
 	{
 		throw new NotImplementedException();
 	}
