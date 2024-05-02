@@ -283,14 +283,14 @@ public partial class WizzStream
 		return ReadUInt8Array(length);
 	}
 
-	public Image ReadImage()
+	public ByteImage ReadImage()
 	{
 		var length = ReadVarInt();
 		if (length == 0)
-			return null!;
+			return new ByteImage(null);
 
 		var buffer = new byte[length];
 		this.Read(buffer);
-		return new Image(buffer);
+		return new ByteImage(buffer);
 	}
 }

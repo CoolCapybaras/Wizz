@@ -14,14 +14,14 @@ namespace Net.Packets.Clientbound
 
 	public class AuthResultPacket : IPacket
 	{
-		private static readonly Image defaultImage = null;
+		private static readonly ByteImage defaultImage = null;
 
 		public int Id => 11;
 
 		public AuthResultFlags Flags;
 		public int ClientId { get; set; }
 		public string Name { get; set; }
-		public Image Image { get; set; }
+		public ByteImage Image { get; set; }
 		public string Url { get; set; }
 		public string Token { get; set; }
 
@@ -36,7 +36,7 @@ namespace Net.Packets.Clientbound
 			this.Url = url;
 		}
 
-		public AuthResultPacket(int clientId, string name, Image image)
+		public AuthResultPacket(int clientId, string name, ByteImage image)
 		{
 			this.Flags = AuthResultFlags.Ok;
 			this.ClientId = clientId;
@@ -47,7 +47,7 @@ namespace Net.Packets.Clientbound
 				this.Image = image;
 		}
 
-		public AuthResultPacket(int clientId, string name, Image image, string token)
+		public AuthResultPacket(int clientId, string name, ByteImage image, string token)
 		{
 			this.Flags = AuthResultFlags.Ok | AuthResultFlags.HasToken;
 			this.ClientId = clientId;
@@ -114,10 +114,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			if (Flags.HasFlag(AuthResultFlags.Ok))
-				Debug.Log($"AuthResult: {ClientId} {Name} {Token}");
-			else if (Flags.HasFlag(AuthResultFlags.HasUrl))
-				Debug.Log($"AuthResult: {Url}");
+			Login.Instance.OnAuthResult(this);
 			return IPacket.CompletedTask;
 		}
 	}

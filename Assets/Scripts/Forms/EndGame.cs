@@ -72,9 +72,10 @@ public class EndGame : MonoBehaviour, IForm
             pedestal.SetActive(true);
             pedestal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = client.Name;
             pedestal.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
-            pedestal.transform.GetChild(1).GetComponent<RawImage>().texture = client.Image;
+            pedestal.transform.GetChild(1).GetComponent<RawImage>().texture = client.Image.GetTexture();
         }
-        if(scores.Count >3)
+
+        if(scores.Count > 3)
             InstantiateScores();
         else
             RemoveScoresFromScroll();

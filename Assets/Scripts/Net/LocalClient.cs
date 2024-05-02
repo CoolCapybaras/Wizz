@@ -19,7 +19,7 @@ public class LocalClient : MonoBehaviour
 
 	public int Id { get; set; }
 	public string Name { get; set; }
-	public Image Image { get; set; }
+	public ByteImage Image { get; set; }
 	public bool Authorized { get; set; }
 
 	private ConcurrentQueue<IPacket> packetQueue = new();
@@ -50,7 +50,7 @@ public class LocalClient : MonoBehaviour
 		try
 		{
 			await ProcessClient();
-		}
+        }
 		catch (Exception e)
 		{
 			Debug.LogException(e);	
@@ -68,6 +68,7 @@ public class LocalClient : MonoBehaviour
 
 		Debug.Log("Client started");
 
+		packetQueue.Enqueue(new ClientConnectedPacket());
 		while (true)
 		{
 			(var id, var data) = await GetNextPacketAsync();

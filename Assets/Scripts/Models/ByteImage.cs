@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class Image
+public class ByteImage
 {
 	private byte[] data;
 	private Texture2D texture;
 	
-	public Image(byte[] data)
+	public ByteImage(byte[] data)
 	{
 		this.data = data;
 	}

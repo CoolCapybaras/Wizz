@@ -58,7 +58,7 @@ public class Lobby : MonoBehaviour, IForm
         {
             var obj = Instantiate(form.playerPrefab, form.playersLayout);
             obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = player.Name;
-            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image;
+            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image.GetTexture();
         }
     }
 
@@ -74,7 +74,7 @@ public class Lobby : MonoBehaviour, IForm
 
         form.quizCard.name.text = gameManager.currentQuiz.Name;
         form.quizCard.description.text = gameManager.currentQuiz.Description;
-        form.quizCard.image.texture = gameManager.currentQuiz.Image;
+        form.quizCard.image.texture = gameManager.currentQuiz.Image.GetTexture();
         // TODO: form.quizCard.hashtags заполнить
     }
 
