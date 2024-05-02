@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Net.Packets.Clientbound
 {
@@ -40,7 +42,8 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
+			QuizLoading.Instance.OnTimerStarted(this);
+			return IPacket.CompletedTask;
 		}
 	}
 }

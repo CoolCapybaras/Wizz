@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Net.Packets.Clientbound
 {
-	public class AuthSuccessPacket : IPacket
+    public class AuthSuccessPacket : IPacket
 	{
 		public int Id => 11;
 
@@ -61,7 +60,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			Debug.Log($"{ClientId} {Name}");
+			Login.Instance.OnLoginSuccess(this);
 			return IPacket.CompletedTask;
 		}
 	}

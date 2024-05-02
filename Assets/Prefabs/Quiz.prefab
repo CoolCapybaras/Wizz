@@ -737,6 +737,7 @@ GameObject:
   - component: {fileID: 2933078488323187469}
   - component: {fileID: 4081674344794508778}
   - component: {fileID: 7865750694457185137}
+  - component: {fileID: 2380687039881977631}
   m_Layer: 5
   m_Name: Quiz
   m_TagString: Untagged
@@ -842,10 +843,22 @@ MonoBehaviour:
     m_SelectedTrigger: 
     m_DisabledTrigger: 
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 2933078488323187469}
+  m_TargetGraphic: {fileID: 8538269834293596356}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2380687039881977631}
+        m_TargetAssemblyTypeName: QuizButton, Assembly-CSharp
+        m_MethodName: OnPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7865750694457185137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -859,6 +872,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &2380687039881977631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4700584823993262081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c2fd2d4464d95542a036a23d646d675, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quizId: 
 --- !u!1 &4707511169976206175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,7 +1224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5125127502378082812}
   - component: {fileID: 725286560912656206}
-  - component: {fileID: 582645054276137768}
+  - component: {fileID: 8538269834293596356}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1233,7 +1259,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7163187652361877355}
   m_CullTransparentMesh: 1
---- !u!114 &582645054276137768
+--- !u!114 &8538269834293596356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1242,7 +1268,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7163187652361877355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -1253,13 +1279,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4d33f380a131f24479df567b4c387136, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Texture: {fileID: 2800000, guid: 4d33f380a131f24479df567b4c387136, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1

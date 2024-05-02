@@ -58,7 +58,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			Debug.Log($"Message: {Type} {Text}");
+			OverlayManager.Instance.ShowInfo(Text, (InfoType)Type);
 			return IPacket.CompletedTask;
 		}
 	}

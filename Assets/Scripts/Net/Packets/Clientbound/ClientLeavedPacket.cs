@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
@@ -53,7 +54,8 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
-		}
+			Lobby.Instance.OnClientLeaved(this);
+            return IPacket.CompletedTask;
+        }
 	}
 }

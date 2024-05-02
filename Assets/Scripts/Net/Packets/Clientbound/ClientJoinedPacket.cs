@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WizzServer.Models;
 
 namespace Net.Packets.Clientbound
 {
-	public class ClientJoinedPacket : IPacket
+    public class ClientJoinedPacket : IPacket
 	{
 		public int Id => 14;
 
@@ -36,6 +35,7 @@ namespace Net.Packets.Clientbound
 
 		public void Populate(WizzStream stream)
 		{
+			Client = new ClientDTO();
 			Client.Id = stream.ReadVarInt();
 			Client.Name = stream.ReadString();
 			Client.Image = stream.ReadImage();
@@ -58,7 +58,8 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync( LocalClient client)
 		{
-			throw new NotImplementedException();
+			Lobby.Instance.OnClientJoined(this);
+            return IPacket.CompletedTask;
 		}
 	}
 }
