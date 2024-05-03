@@ -67,6 +67,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
         time = 0;
         questionTime = question.Time;
         timerStarted = true;
+        SoundManager.Instance.SetLowPassFilter(false, 0, false);
+        SoundManager.Instance.PlayMusic("ingame");
     }
 
     public void OnPlayerAnswer(int index)
@@ -78,12 +80,13 @@ public class AnswerQuestion : MonoBehaviour, IForm
     public void OnRightAnswer(RightAnswerPacket packet)
     {
         if (answeredIndex == packet.AnswerId)
-            OverlayManager.Instance.ShowInfo("Правильный ответ!", InfoType.Success);
+            OverlayManager.Instance.ShowInfo("Заглушка для верного ответа", InfoType.Success);
         else
-            OverlayManager.Instance.ShowInfo("Не угадал :-(((((", InfoType.Error);
+            OverlayManager.Instance.ShowInfo("Заглушка для неверного ответа", InfoType.Error);
 
         timerStarted = false;
         HighlightButton(packet.AnswerId);
+        SoundManager.Instance.SetLowPassFilter(true, 1);
     }
 
     public void HighlightButton(int index)
@@ -108,6 +111,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
             .ToDictionary(x => x.Key, x => x.Value);
         gameManager.isInLobby = false;
         FormManager.Instance.ChangeForm("endgame");
+        gameManager.isInStartedGame = false;
     }
 
     public void OnRoundEnded(RoundEndedPacket packet)

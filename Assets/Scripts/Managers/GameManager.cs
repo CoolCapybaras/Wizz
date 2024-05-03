@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int currentQuestionCount;
 
     public bool isInLobby;
+    public bool isInStartedGame;
     private void Awake()
     {
         Instance = this;
@@ -27,6 +28,17 @@ public class GameManager : MonoBehaviour
     {
         if (isInLobby)
             LocalClient.instance.SendPacket(new LeaveLobbyPacket());
+    }
+
+    public void EnsureLeavedStartedGame()
+    {
+        if (isInStartedGame)
+        {
+            SoundManager.Instance.StopMusic();
+            SoundManager.Instance.ForceCountdownStop();
+            SoundManager.Instance.SetLowPassFilter(false, 0, false);
+            SoundManager.Instance.PlayMusic("menu");
+        }
     }
 
     public ClientDTO GetClientById(int id) => currentClients.First(x => x.Id == id);

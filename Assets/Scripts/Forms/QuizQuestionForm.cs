@@ -54,6 +54,8 @@ public class QuizQuestionForm : MonoBehaviour, IForm
 
         time = 0;
         questionCountdown = question.Countdown;
+        SoundManager.Instance.StartCountdown((int)questionCountdown);
+        SoundManager.Instance.StopMusic();
     }
 
     public void OnRoundStarted(RoundStartedPacket packet)

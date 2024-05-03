@@ -16,6 +16,7 @@ public class Login : MonoBehaviour, IForm
     {
         Instance = this;
         localClient = LocalClient.instance;
+        SoundManager.Instance.PlayMusic("menu");
     }
 
     public void OnAnonLoginPressed()
@@ -26,8 +27,6 @@ public class Login : MonoBehaviour, IForm
             Name = inputField.text
         });
     }
-
-
 
     public void OnVkLoginPressed()
     {

@@ -86,5 +86,9 @@ public class EndGame : MonoBehaviour, IForm
         {
             particle.Play();
         }
+        SoundManager.Instance.PlayShortClip("endgame");
+        SoundManager.Instance.StopMusic();
+        SoundManager.Instance.SetLowPassFilter(false, 1);
+        SoundManager.Instance.PlayMusic("menu");
     }
 }
