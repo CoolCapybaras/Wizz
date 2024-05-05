@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,12 @@ using UnityEngine;
 
 public class FormManager : MonoBehaviour
 {
+    public enum AnimType
+    {
+        In,
+        Out
+    }
+
     public static FormManager Instance;
 
     private void Awake()
@@ -23,11 +30,61 @@ public class FormManager : MonoBehaviour
     public List<Form> forms;
     private Form activeForm;
 
-    public void ChangeForm(string id)
+    public void ChangeForm(string id, AnimType animType = AnimType.In)
     {
-        if (activeForm != null)
-            activeForm.Obj.SetActive(false);
+        if (activeForm.Obj == null)
+        {
+            SetActiveForm(id);
+            return;
+        }
 
+        switch (animType)
+        {
+            case AnimType.In:
+                GetInSequence(id).Play();
+                break;
+            case AnimType.Out:
+                GetOutSequence(id).Play();
+                break;
+        }
+    }
+
+    private Sequence GetInSequence(string id)
+    {
+        var inSequence = DOTween.Sequence();
+        inSequence
+            .InsertCallback(0, () =>
+            {
+                activeForm.Obj.SetActive(false);
+            })
+            .InsertCallback(0, () =>
+            {
+                SetActiveForm(id);
+            })
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(0.5f))
+            .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
+        return inSequence;
+    }
+
+    private Sequence GetOutSequence(string id)
+    {
+        var outSequence = DOTween.Sequence();
+        outSequence
+            .InsertCallback(0, () =>
+            {
+                activeForm.Obj.SetActive(false);
+            })
+            .InsertCallback(0, () =>
+            {
+                SetActiveForm(id);
+            })
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(3f))
+            .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
+        return outSequence;
+    }
+
+    private void SetActiveForm(string id)
+    {
         activeForm = GetFormById(id);
         activeForm.Obj.SetActive(true);
         activeForm.Obj.GetComponent<IForm>().InitializeForm();

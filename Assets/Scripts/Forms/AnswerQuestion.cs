@@ -107,7 +107,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
     {
         gameManager.CurrentScore = packet.Score;
         gameManager.CurrentScore = gameManager.CurrentScore
-            .OrderBy(x => x.Value)
+            .OrderByDescending(x => x.Value)
             .ToDictionary(x => x.Key, x => x.Value);
         gameManager.isInLobby = false;
         FormManager.Instance.ChangeForm("endgame");
@@ -118,7 +118,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
     {
         gameManager.CurrentScore = packet.Score;
         gameManager.CurrentScore = gameManager.CurrentScore
-            .OrderBy(x => x.Value)
+            .OrderByDescending(x => x.Value)
             .ToDictionary(x => x.Key, x => x.Value);
         FormManager.Instance.ChangeForm("rating");
     }

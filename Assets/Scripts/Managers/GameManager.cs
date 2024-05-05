@@ -32,13 +32,14 @@ public class GameManager : MonoBehaviour
 
     public void EnsureLeavedStartedGame()
     {
-        if (isInStartedGame)
-        {
-            SoundManager.Instance.StopMusic();
-            SoundManager.Instance.ForceCountdownStop();
-            SoundManager.Instance.SetLowPassFilter(false, 0, false);
-            SoundManager.Instance.PlayMusic("menu");
-        }
+        if (!isInStartedGame)
+            return;
+
+        SoundManager.Instance.StopMusic();
+        SoundManager.Instance.ForceCountdownStop();
+        SoundManager.Instance.SetLowPassFilter(false, 0, false);
+        SoundManager.Instance.PlayMusic("menu", true);
+        isInStartedGame = false;
     }
 
     public ClientDTO GetClientById(int id) => currentClients.First(x => x.Id == id);

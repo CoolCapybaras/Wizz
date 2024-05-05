@@ -52,15 +52,15 @@ public class MyQuizzes : MonoBehaviour, IForm
 
             obj.GetComponent<QuizButton>().quizId = quiz.Id;
 
-            var transform = obj.transform.GetChild(0);
-            transform.GetChild(0).GetComponent<RawImage>().texture = quiz.Image.GetTexture();
-            transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = quiz.Description;
-            transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = quiz.Name;
+            var transform = obj.transform.GetChild(1);
+            obj.transform.GetChild(0).GetComponent<RawImage>().texture = quiz.Image.GetTexture();
+            transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = quiz.Description;
+            transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = quiz.Name;
             // TODO: transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = quiz.Hashtags;
             if (quiz.AuthorId != LocalClient.instance.Id)
             {
+                transform.GetChild(5).gameObject.SetActive(false);
                 transform.GetChild(6).gameObject.SetActive(false);
-                transform.GetChild(7).gameObject.SetActive(false);
             }
         }
     }

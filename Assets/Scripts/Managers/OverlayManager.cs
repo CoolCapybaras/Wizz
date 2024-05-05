@@ -63,6 +63,6 @@ public class OverlayManager : MonoBehaviour
         GameManager.Instance.EnsureLeavedLobby();
         GameManager.Instance.EnsureLeavedStartedGame();
 
-        FormManager.Instance.ChangeForm("mainmenu");
+        FormManager.Instance.ChangeForm("mainmenu", FormManager.AnimType.Out);
     }
 }

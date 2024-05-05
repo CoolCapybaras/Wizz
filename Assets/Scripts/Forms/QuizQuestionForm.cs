@@ -31,11 +31,13 @@ public class QuizQuestionForm : MonoBehaviour, IForm
 
     private float time;
     private float questionCountdown;
+    private bool timerStarted;
 
     private void Update()
     {
-        if (time >= questionCountdown)
+        if (timerStarted && time >= questionCountdown)
         {
+            timerStarted = false;
             ShowAnswers();
             return;
         }
@@ -54,6 +56,7 @@ public class QuizQuestionForm : MonoBehaviour, IForm
 
         time = 0;
         questionCountdown = question.Countdown;
+        timerStarted = true;
         SoundManager.Instance.StartCountdown((int)questionCountdown);
         SoundManager.Instance.StopMusic();
     }

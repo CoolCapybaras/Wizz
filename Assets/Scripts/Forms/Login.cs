@@ -3,7 +3,6 @@ using Net.Packets.Serverbound;
 using System.Collections;
 using System.Xml.Linq;
 using TMPro;
-using UnityEditor.Sprites;
 using UnityEngine;
 
 public class Login : MonoBehaviour, IForm
@@ -16,7 +15,7 @@ public class Login : MonoBehaviour, IForm
     {
         Instance = this;
         localClient = LocalClient.instance;
-        SoundManager.Instance.PlayMusic("menu");
+        SoundManager.Instance.PlayMusic("menu", true);
     }
 
     public void OnAnonLoginPressed()
