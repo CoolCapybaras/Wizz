@@ -65,4 +65,12 @@ public class OverlayManager : MonoBehaviour
 
         FormManager.Instance.ChangeForm("mainmenu", FormManager.AnimType.Out);
     }
+
+    public void OnProfileEditPressed()
+    {
+        GameManager.Instance.EnsureLeavedLobby();
+        GameManager.Instance.EnsureLeavedStartedGame();
+
+        FormManager.Instance.ChangeForm("profileedit");
+    }
 }

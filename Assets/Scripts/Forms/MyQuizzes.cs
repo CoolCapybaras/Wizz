@@ -12,6 +12,13 @@ using UnityEngine.Video;
 public class MyQuizzes : MonoBehaviour, IForm
 {
     [Serializable]
+    public enum QuizzesType
+    {
+        My,
+        Server
+    }
+
+    [Serializable]
     public struct Form
     {
         public TextMeshProUGUI topText;
@@ -25,6 +32,7 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     public List<Quiz> quizzes;
 
+    private QuizzesType type;
     private void Awake()
     {
         Instance = this;
@@ -45,6 +53,11 @@ public class MyQuizzes : MonoBehaviour, IForm
     public void InstantiateQuizzes()
     {
         RemoveQuizzesFromLayout();
+
+        if (type == QuizzesType.My)
+            form.topText.text = "Мои викторины";
+        else if (type == QuizzesType.Server)
+            form.topText.text = "Поиск викторин";
 
         foreach(var quiz in quizzes)
         {
@@ -69,6 +82,11 @@ public class MyQuizzes : MonoBehaviour, IForm
     {
         RemoveQuizzesFromLayout();
         OnSearchEndEdit(string.Empty);
+    }
+
+    public void SetQuizzesList(int type)
+    {
+        this.type = (QuizzesType)type;
     }
 
     public void OnSearchResult(SearchResultPacket packet)

@@ -1,13 +1,42 @@
+using SFB;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class Helpers : MonoBehaviour
+public static class Helpers
 {
-    public void RemoveAllChilds(Transform transform)
+    public static Texture2D GetTextureFromPC()
     {
-        var count = transform.childCount;
-        for (int i = 0; i < count; ++i)
-            Destroy(transform.GetChild(i).gameObject);
+        var extensions = new[]
+        {
+            new ExtensionFilter("Image Files", "png", "jpg", "jpeg")
+        };
+        var file = StandaloneFileBrowser.OpenFilePanel("Open Image", "", extensions, false);
+        var tex = new Texture2D(2, 2);
+        tex.LoadImage(File.ReadAllBytes(file[0]));
+        return tex;
+    }
+
+    public static Texture2D GetTextureFromAndroid()
+    {
+        var tex = new Texture2D(2, 2);
+        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+        {
+            Debug.Log("Image path: " + path);
+            if (path != null)
+            {
+                // Create Texture from selected image
+                Texture2D texture = NativeGallery.LoadImageAtPath(path);
+                if (texture == null)
+                {
+                    Debug.Log("Couldn't load texture from " + path);
+                    return;
+                }
+                tex = texture;
+            }
+        });
+        return tex;
     }
 }
