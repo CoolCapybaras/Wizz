@@ -54,10 +54,20 @@ public class ProfileEdit : MonoBehaviour, IForm
     {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
         avatarTexture = Helpers.GetTextureFromPC();
+        SetAvatar(avatarTexture);
 #elif UNITY_ANDROID
-        avatarTexture = Helpers.GetTextureFromAndroid();
+        Helpers.GetTextureFromAndroid((avatar) =>
+        {
+            SetAvatar(avatar);
+        });
 #endif
-        form.avatar.texture = avatarTexture;
+
+    }
+
+    public void SetAvatar(Texture2D texture)
+    {
+        avatarTexture = texture;
+        form.avatar.texture = texture;
         SendChangesToServer();
     }
 

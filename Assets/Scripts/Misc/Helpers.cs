@@ -19,9 +19,8 @@ public static class Helpers
         return tex;
     }
 
-    public static Texture2D GetTextureFromAndroid()
+    public static void GetTextureFromAndroid(Action<Texture2D> action)
     {
-        var tex = new Texture2D(2, 2);
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
         {
             Debug.Log("Image path: " + path);
@@ -34,9 +33,8 @@ public static class Helpers
                     Debug.Log("Couldn't load texture from " + path);
                     return;
                 }
-                tex = texture;
+                action.Invoke(texture);
             }
         });
-        return tex;
     }
 }

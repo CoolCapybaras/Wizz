@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Application.targetFrameRate = 120;
     }
 
     public void EnsureLeavedLobby()
