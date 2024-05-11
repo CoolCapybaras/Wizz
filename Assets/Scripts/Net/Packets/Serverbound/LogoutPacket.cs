@@ -5,12 +5,12 @@ namespace Net.Packets.Serverbound
 {
 	public class LogoutPacket : IPacket
 	{
-		public int Id => 11;
+		public int Id => 12;
 
-		public static AnswerGamePacket Deserialize(byte[] data)
+		public static LogoutPacket Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new AnswerGamePacket();
+			var packet = new LogoutPacket();
 			packet.Populate(stream);
 			return packet;
 		}

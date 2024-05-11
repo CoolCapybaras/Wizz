@@ -12,10 +12,10 @@ namespace Net.Packets.Clientbound
 
 		}
 
-		public static ClientLeavedPacket Deserialize(byte[] data)
+		public static ShowQuestionPacket Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new ClientLeavedPacket();
+			var packet = new ShowQuestionPacket();
 			packet.Populate(stream);
 			return packet;
 		}

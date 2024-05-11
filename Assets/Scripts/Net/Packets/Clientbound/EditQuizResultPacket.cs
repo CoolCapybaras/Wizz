@@ -5,7 +5,7 @@ namespace Net.Packets.Clientbound
 {
 	public class EditQuizResultPacket : IPacket
 	{
-		public int Id => 26;
+		public int Id => 25;
 
 		public Quiz Quiz { get; set; }
 
@@ -19,10 +19,10 @@ namespace Net.Packets.Clientbound
 			Quiz = quiz;
 		}
 
-		public static GameStartedPacket Deserialize(byte[] data)
+		public static EditQuizResultPacket Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new GameStartedPacket();
+			var packet = new EditQuizResultPacket();
 			packet.Populate(stream);
 			return packet;
 		}
