@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Net.Packets.Serverbound
+namespace Net.Packets.Clientbound
 {
-	public class EditQuizPacket : IPacket
+	public class EditQuizResultPacket : IPacket
 	{
-		public int Id => 11;
+		public int Id => 26;
 
-		public int QuizId { get; set; }
+		public Quiz Quiz { get; set; }
 
-		public static EditQuizPacket Deserialize(byte[] data)
+		public EditQuizResultPacket()
+		{
+
+		}
+
+		public EditQuizResultPacket(Quiz quiz)
+		{
+			Quiz = quiz;
+		}
+
+		public static GameStartedPacket Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new EditQuizPacket();
+			var packet = new GameStartedPacket();
 			packet.Populate(stream);
 			return packet;
 		}
@@ -25,13 +35,13 @@ namespace Net.Packets.Serverbound
 
 		public void Populate(WizzStream stream)
 		{
-			QuizId = stream.ReadVarInt();
+			Quiz = Quiz.Deserialize(stream);
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
-			packetStream.WriteVarInt(QuizId);
+			Quiz.Serialize(packetStream, false);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Serverbound
 {
 	public class JoinLobbyPacket : IPacket
 	{
-		private static readonly Dictionary<int, string> easterEggQuizzes = new()
-		{
-			{ 250252, "easteregg" }
-		};
-
 		public int Id => 5;
 
 		public int LobbyId { get; set; }

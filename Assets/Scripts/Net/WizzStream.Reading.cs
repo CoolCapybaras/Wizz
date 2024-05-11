@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Buffers.Binary;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 public partial class WizzStream
 {
-	public sbyte ReadSignedByte() => (sbyte)this.ReadUnsignedByte();
-
-	public async Task<sbyte> ReadByteAsync() => (sbyte)await this.ReadUnsignedByteAsync();
-
-	public byte ReadUnsignedByte()
+	public byte ReadUByte()
 	{
 		Span<byte> buffer = stackalloc byte[1];
 		BaseStream.Read(buffer);
 		return buffer[0];
 	}
 
-	public async Task<byte> ReadUnsignedByteAsync()
+	public async Task<byte> ReadUByteAsync()
 	{
 		var buffer = new byte[1];
 		await this.ReadAsync(buffer);
@@ -27,47 +21,18 @@ public partial class WizzStream
 
 	public bool ReadBoolean()
 	{
-		return ReadUnsignedByte() == 0x01;
+		return ReadUByte() == 0x01;
 	}
 
 	public async Task<bool> ReadBooleanAsync()
 	{
-		var value = (int)await this.ReadByteAsync();
-		return value switch
-		{
-			0x00 => false,
-			0x01 => true,
-			_ => throw new ArgumentOutOfRangeException("Byte returned by stream is out of range (0x00 or 0x01)",
-				nameof(BaseStream))
-		};
-	}
-
-	public ushort ReadUnsignedShort()
-	{
-		Span<byte> buffer = stackalloc byte[2];
-		this.Read(buffer);
-		return BinaryPrimitives.ReadUInt16LittleEndian(buffer);
-	}
-
-	public async Task<ushort> ReadUnsignedShortAsync()
-	{
-		var buffer = new byte[2];
-		await this.ReadAsync(buffer);
-		return BinaryPrimitives.ReadUInt16LittleEndian(buffer);
-	}
-
-	public short ReadShort()
-	{
-		Span<byte> buffer = stackalloc byte[2];
-		this.Read(buffer);
-		return BinaryPrimitives.ReadInt16LittleEndian(buffer);
-	}
-
-	public async Task<short> ReadShortAsync()
-	{
-		using var buffer = new RentedArray<byte>(sizeof(short));
-		await this.ReadAsync(buffer);
-		return BinaryPrimitives.ReadInt16LittleEndian(buffer);
+		var value = (int)await this.ReadUByteAsync();
+		if (value == 0x00)
+			return false;
+		else if (value == 0x01)
+			return true;
+		else
+			throw new ArgumentOutOfRangeException("Byte returned by stream is out of range (0x00 or 0x01)", nameof(BaseStream));
 	}
 
 	public int ReadInt()
@@ -96,20 +61,6 @@ public partial class WizzStream
 		using var buffer = new RentedArray<byte>(sizeof(long));
 		await this.ReadAsync(buffer);
 		return BinaryPrimitives.ReadInt64LittleEndian(buffer);
-	}
-
-	public ulong ReadUnsignedLong()
-	{
-		Span<byte> buffer = stackalloc byte[8];
-		this.Read(buffer);
-		return BinaryPrimitives.ReadUInt64LittleEndian(buffer);
-	}
-
-	public async Task<ulong> ReadUnsignedLongAsync()
-	{
-		using var buffer = new RentedArray<byte>(sizeof(ulong));
-		await this.ReadAsync(buffer);
-		return BinaryPrimitives.ReadUInt64LittleEndian(buffer);
 	}
 
 	public string ReadString(int maxLength = 32767)
@@ -154,7 +105,7 @@ public partial class WizzStream
 		byte read;
 		do
 		{
-			read = this.ReadUnsignedByte();
+			read = this.ReadUByte();
 			int value = read & 0b01111111;
 			result |= value << (7 * numRead);
 
@@ -175,7 +126,7 @@ public partial class WizzStream
 		byte read;
 		do
 		{
-			read = await this.ReadUnsignedByteAsync();
+			read = await this.ReadUByteAsync();
 			int value = read & 0b01111111;
 			result |= value << (7 * numRead);
 
@@ -189,7 +140,7 @@ public partial class WizzStream
 		return result;
 	}
 
-	public byte[] ReadUInt8Array(int length = 0)
+	public byte[] ReadByteArray(int length = 0)
 	{
 		if (length == 0)
 			length = ReadVarInt();
@@ -208,7 +159,7 @@ public partial class WizzStream
 		return result;
 	}
 
-	public async Task<byte[]> ReadUInt8ArrayAsync(int length = 0)
+	public async Task<byte[]> ReadByteArrayAsync(int length = 0)
 	{
 		if (length == 0)
 			length = await this.ReadVarIntAsync();
@@ -227,14 +178,6 @@ public partial class WizzStream
 		return result;
 	}
 
-	public async Task<byte> ReadUInt8Async()
-	{
-		int value = await this.ReadByteAsync();
-		if (value == -1)
-			throw new EndOfStreamException();
-		return (byte)value;
-	}
-
 	public long ReadVarLong()
 	{
 		int numRead = 0;
@@ -242,7 +185,7 @@ public partial class WizzStream
 		byte read;
 		do
 		{
-			read = this.ReadUnsignedByte();
+			read = this.ReadUByte();
 			int value = (read & 0b01111111);
 			result |= (long)value << (7 * numRead);
 
@@ -263,7 +206,7 @@ public partial class WizzStream
 		byte read;
 		do
 		{
-			read = await this.ReadUnsignedByteAsync();
+			read = await this.ReadUByteAsync();
 			int value = (read & 0b01111111);
 			result |= (long)value << (7 * numRead);
 
@@ -275,12 +218,6 @@ public partial class WizzStream
 		} while ((read & 0b10000000) != 0);
 
 		return result;
-	}
-
-	public byte[] ReadByteArray()
-	{
-		var length = ReadVarInt();
-		return ReadUInt8Array(length);
 	}
 
 	public ByteImage ReadImage()

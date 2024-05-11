@@ -7,7 +7,7 @@ namespace Net.Packets.Serverbound
 	{
 		public int Id => 4;
 
-		public string QuizId { get; set; }
+		public int QuizId { get; set; }
 
 		public static CreateLobbyPacket Deserialize(byte[] data)
 		{
@@ -25,13 +25,13 @@ namespace Net.Packets.Serverbound
 
 		public void Populate(WizzStream stream)
 		{
-			QuizId = stream.ReadString();
+			QuizId = stream.ReadVarInt();
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
-			packetStream.WriteString(QuizId);
+			packetStream.WriteVarInt(QuizId);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);

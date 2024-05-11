@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Net.Packets.Serverbound
 {
@@ -9,7 +8,7 @@ namespace Net.Packets.Serverbound
 	{
 		public static readonly Regex NameRegex = new("^[A-Za-zА-Яа-я0-9_]{3,18}$");
 
-		public int Id => 9;
+		public int Id => 10;
 
 		public int Type { get; set; }
 		public string Name { get; set; }

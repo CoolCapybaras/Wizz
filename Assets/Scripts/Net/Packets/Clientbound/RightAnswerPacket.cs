@@ -1,22 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
 {
 	public class RightAnswerPacket : IPacket
 	{
-		public int Id => 21;
+		public int Id => 24;
 
 		public int AnswerId { get; set; }
+		public int RoundScore { get; set; }
 
 		public RightAnswerPacket()
 		{
 
 		}
 
-		public RightAnswerPacket(int answerId)
+		public RightAnswerPacket(int answerId, int rountScore)
 		{
 			this.AnswerId = answerId;
+			this.RoundScore = rountScore;
 		}
 
 		public static RightAnswerPacket Deserialize(byte[] data)
@@ -36,12 +37,14 @@ namespace Net.Packets.Clientbound
 		public void Populate(WizzStream stream)
 		{
 			AnswerId = stream.ReadVarInt();
+			RoundScore = stream.ReadVarInt();
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
 			packetStream.WriteVarInt(AnswerId);
+			packetStream.WriteVarInt(RoundScore);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
 {
 	public class ClientLeavedPacket : IPacket
 	{
-		public int Id => 15;
+		public int Id => 17;
 
 		public int ClientId { get; set; }
 
