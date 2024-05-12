@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
@@ -41,7 +42,7 @@ namespace Net.Packets.Clientbound
 			string[] answers = new string[count];
 			for (int i = 0; i < count; i++)
 				answers[i] = stream.ReadString();
-			Question.Answers = answers;
+			Question.Answers = answers.ToList();
 			Question.Image = stream.ReadImage();
 			Question.Time = stream.ReadVarInt();
 			Question.Countdown = stream.ReadVarInt();
@@ -51,8 +52,8 @@ namespace Net.Packets.Clientbound
 		{
 			using var packetStream = new WizzStream();
 			packetStream.WriteString(Question.Question);
-			packetStream.WriteVarInt(Question.Answers.Length);
-			for (int i = 0; i < Question.Answers.Length; i++)
+			packetStream.WriteVarInt(Question.Answers.Count);
+			for (int i = 0; i < Question.Answers.Count; i++)
 				packetStream.WriteString(Question.Answers[i]);
 			packetStream.WriteImage(Question.Image);
 			packetStream.WriteVarInt(Question.Time);

@@ -37,4 +37,17 @@ public static class Helpers
             }
         });
     }
+
+    public static void GetTexture(Action<Texture2D> action)
+    {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+        var texture = Helpers.GetTextureFromPC();
+        action.Invoke(texture);
+#elif UNITY_ANDROID
+        Helpers.GetTextureFromAndroid((avatar) =>
+        {
+            action.Invoke(avatar);
+        });
+#endif
+    }
 }

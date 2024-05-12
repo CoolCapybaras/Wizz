@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Quiz
 {
@@ -9,5 +10,5 @@ public class Quiz
 	public string Description { get; set; }
 	public int QuestionsCount { get; set; }
 	public int AuthorId { get; set; }
-	public QuizQuestion[] Questions { get; set; }
+	public List<QuizQuestion> Questions { get; set; }
 }
