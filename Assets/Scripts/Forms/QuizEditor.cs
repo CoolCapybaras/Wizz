@@ -153,6 +153,7 @@ public class QuizEditor : MonoBehaviour, IForm
     public void OnQuestionImageChanged(Texture2D image, int answerIndex)
     {
         questions[answerIndex].image.texture = image;
+        quiz.Questions[answerIndex].Image = new ByteImage(image.GetRawTextureData());
     }
 
     public void OnDeleteQuestionPressed(int answerIndex)
@@ -170,6 +171,84 @@ public class QuizEditor : MonoBehaviour, IForm
             questions[i].obj.GetComponent<QuizEditorQuestionHelper>().AnswerIndex = i;
             questions[i].count.text = $"{i + 1}.";
         }
+    }
+
+    public void OnQuizDeletePressed()
+    {
+        
+    }
+
+    public void SaveQuiz()
+    {
+        if(!CheckQuizCorrectness())
+            return;
+        
+    }
+
+    public bool CheckQuizCorrectness()
+    {
+        var flag = true;
+        if (string.IsNullOrEmpty(quiz.Name) || quiz.Name.Length > 48 || quiz.Name.Length < 3)
+        {
+            flag = false;
+            OverlayManager.Instance.ShowInfo("Длина имени викторины должна быть от 3 до 48 символов", InfoType.Error);
+        }
+
+        if (quiz.Image == null)
+        {
+            flag = false;
+            OverlayManager.Instance.ShowInfo("Не установлена картинка викторины", InfoType.Error);
+        }
+
+        if (string.IsNullOrEmpty(quiz.Description) || quiz.Description.Length > 128 || quiz.Description.Length < 3)
+        {
+            flag = false;
+            OverlayManager.Instance.ShowInfo("Длина описания викторины должна быть от 3 до 128 символов", InfoType.Error);
+        }
+
+        if (quiz.Questions.Count == 0)
+        {
+            flag = false;
+            OverlayManager.Instance.ShowInfo("Не создано ни одного вопроса", InfoType.Error);
+        }
+
+        for (int i = 0; i < quiz.Questions.Count; i++)
+        {
+            var question = quiz.Questions[i];
+            if (string.IsNullOrEmpty(question.Question))
+            {
+                flag = false;
+                OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан вопрос", InfoType.Error);
+            }
+
+            if (question.Image == null)
+            {
+                flag = false;
+                OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не установлена картинка", InfoType.Error);
+            }
+
+            if (question.Time == 0)
+            {
+                flag = false;
+                OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указано время ответа", InfoType.Error);
+            }
+
+            if (question.AnswerIndex == -1)
+            {
+                flag = false;
+                OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
+            }
+
+            for (int j = 0; j < question.Answers.Count; j++)
+            {
+                if (string.IsNullOrEmpty(question.Answers[j]))
+                {
+                    flag = false;
+                    OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан {j + 1} вариант ответа", InfoType.Error);
+                }
+            }
+        }
+        return flag;
     }
     
     public void InitializeForm()
