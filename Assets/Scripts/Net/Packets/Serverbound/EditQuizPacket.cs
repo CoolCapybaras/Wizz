@@ -34,7 +34,7 @@ namespace Net.Packets.Serverbound
 		{
 			using var packetStream = new WizzStream();
 			packetStream.WriteVarInt(QuizId);
-			Quiz.Serialize(packetStream);
+			Quiz.Serialize(packetStream, false);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);
