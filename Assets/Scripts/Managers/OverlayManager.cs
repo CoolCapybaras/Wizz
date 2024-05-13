@@ -1,5 +1,4 @@
 using Net.Packets.Serverbound;
-using Ookii.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +41,8 @@ public class OverlayManager : MonoBehaviour
         var obj = Instantiate(form.infoPrefab, form.infoLayout);
         obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
         obj.transform.GetChild(1).GetComponent<Image>().sprite = form.infoSprites[(int)type];
+
+        SoundManager.Instance.PlayShortClip(type == InfoType.Success ? "success" : "fail");
     }
 
     public void SetActiveTopButtons(bool active)
@@ -59,7 +60,16 @@ public class OverlayManager : MonoBehaviour
     public void OnMainMenuPressed()
     {
         GameManager.Instance.EnsureLeavedLobby();
+        GameManager.Instance.EnsureLeavedStartedGame();
 
-        FormManager.Instance.ChangeForm("mainmenu");
+        FormManager.Instance.ChangeForm("mainmenu", FormManager.AnimType.Out);
+    }
+
+    public void OnProfileEditPressed()
+    {
+        GameManager.Instance.EnsureLeavedLobby();
+        GameManager.Instance.EnsureLeavedStartedGame();
+
+        FormManager.Instance.ChangeForm("profileedit");
     }
 }

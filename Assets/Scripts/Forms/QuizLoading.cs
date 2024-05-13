@@ -43,6 +43,7 @@ public class QuizLoading : MonoBehaviour, IForm
         form.quizNameText.text = GameManager.Instance.currentQuiz.Name;
         form.timerText.text = "Загрузка...";
         timerStarted = false;
+        SoundManager.Instance.SetLowPassFilter(true, 1);
     }
 
     public void OnTimerStarted(TimerStartedPacket packet)

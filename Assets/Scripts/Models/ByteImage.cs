@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ByteImage
 {
-	private byte[] data;
+	public byte[] data;
 	private Texture2D texture;
 	
 	public ByteImage(byte[] data)

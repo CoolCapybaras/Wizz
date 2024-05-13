@@ -3,7 +3,6 @@ using Net.Packets.Serverbound;
 using System.Collections;
 using System.Xml.Linq;
 using TMPro;
-using UnityEditor.Sprites;
 using UnityEngine;
 
 public class Login : MonoBehaviour, IForm
@@ -16,6 +15,8 @@ public class Login : MonoBehaviour, IForm
     {
         Instance = this;
         localClient = LocalClient.instance;
+        SetActiveFields(false);
+        SoundManager.Instance.PlayMusic("menu", true);
     }
 
     public void OnAnonLoginPressed()
@@ -26,8 +27,6 @@ public class Login : MonoBehaviour, IForm
             Name = inputField.text
         });
     }
-
-
 
     public void OnVkLoginPressed()
     {
@@ -50,7 +49,7 @@ public class Login : MonoBehaviour, IForm
         if (packet.Flags.HasFlag(AuthResultFlags.Ok))
         {
             Debug.Log("Authresult OK");
-            OnAuthSuccessful(packet.Name, packet.Id);
+            OnAuthSuccessful(packet.Name, packet.Id, packet.Image);
         }
 
         if (packet.Flags.HasFlag(AuthResultFlags.HasToken))
@@ -64,10 +63,11 @@ public class Login : MonoBehaviour, IForm
         }
     }
 
-    private void OnAuthSuccessful(string name, int id)
+    private void OnAuthSuccessful(string name, int id, ByteImage image)
     {
         LocalClient.instance.Name = name;
         LocalClient.instance.Id = id;
+        LocalClient.instance.Image = image;
         LocalClient.instance.Authorized = true;
         FormManager.Instance.ChangeForm("mainmenu");
 
@@ -83,6 +83,12 @@ public class Login : MonoBehaviour, IForm
                 Type = AuthType.Token,
                 Token = PlayerPrefs.GetString("token")
             });
+        SetActiveFields(true);
+    }
+
+    private void SetActiveFields(bool active)
+    {
+        inputField.interactable = active;
     }
 
     private void OpenURL(string url)

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class MainMenu : MonoBehaviour, IForm
 {
@@ -37,6 +38,11 @@ public class MainMenu : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        var sequence = DOTween.Sequence();
+        sequence.Insert(0, form.topGreetingText.transform.DOLocalMoveX(-825f, 1, true).From(-2500))
+            .Insert(0, form.topGreetingText.DOFade(1, 1).From(0))
+            .Insert(0, form.myQuizzesLayout.GetComponent<CanvasGroup>().DOFade(1, 1).From(0))
+            .Play();
         form.topGreetingText.text = $"Пора создавать новое, {localClient.Name}!";
     }
 }
