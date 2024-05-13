@@ -51,7 +51,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
-        var question = gameManager.currentQuestion;
+        var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
         

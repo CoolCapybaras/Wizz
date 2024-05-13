@@ -39,7 +39,7 @@ public class QuizLoading : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
-        GameManager.Instance.currentQuestionCount = 0;
+        GameManager.Instance.currentQuestionIndex = 0;
         form.quizNameText.text = GameManager.Instance.currentQuiz.Name;
         form.timerText.text = "Загрузка...";
         timerStarted = false;

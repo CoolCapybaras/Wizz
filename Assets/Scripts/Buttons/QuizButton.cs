@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class QuizButton : MonoBehaviour
 {
-    public string quizId;
+    public int quizId;
     private GameObject content;
     private float startYPos;
 
