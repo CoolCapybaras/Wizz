@@ -111,5 +111,6 @@ public class Lobby : MonoBehaviour, IForm
     public void OnGameStarted(GameStartedPacket packet)
     {
         FormManager.Instance.ChangeForm("quizloading");
+        gameManager.isInStartedGame = true;
     }
 }

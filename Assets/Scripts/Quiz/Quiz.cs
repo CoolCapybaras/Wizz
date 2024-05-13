@@ -6,7 +6,7 @@
 	public string Description { get; set; }
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
-	public QuizQuestion[] Questions { get; set; }
+	public List<QuizQuestion> Questions { get; set; }
 
 	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
 	{

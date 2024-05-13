@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers.Binary;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -165,6 +166,16 @@ public partial class WizzStream
 
 	public void WriteImage(ByteImage image)
 	{
-		throw new NotImplementedException();
-	}
+        if (image is null)
+        {
+            WriteVarInt(0);
+            return;
+        }
+
+        using var stream = new MemoryStream(image.data);
+        WriteVarInt((int)stream.Length);
+
+        stream.Position = 0;
+        stream.CopyTo(BaseStream);
+    }
 }

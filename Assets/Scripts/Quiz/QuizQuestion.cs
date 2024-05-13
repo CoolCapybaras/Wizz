@@ -8,7 +8,7 @@ public class QuizQuestion
 {
 	public QuizQuestionType Type { get; set; }
 	public string Question { get; set; }
-	public string[] Answers { get; set; }
+	public List<string> Answers { get; set; }
 	public ByteImage Image { get; set; }
 	public int Time { get; set; }
 
