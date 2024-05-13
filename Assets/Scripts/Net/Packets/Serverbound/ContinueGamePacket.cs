@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
-namespace Net.Packets.Clientbound
+namespace Net.Packets.Serverbound
 {
-	public class TimerStartedPacket : IPacket
+	public class ContinueGamePacket : IPacket
 	{
-		public int Id => 20;
+		public int Id => 9;
 
-		public static TimerStartedPacket Deserialize(byte[] data)
+		public static ContinueGamePacket Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new TimerStartedPacket();
+			var packet = new ContinueGamePacket();
 			packet.Populate(stream);
 			return packet;
 		}
@@ -39,8 +40,7 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			QuizLoading.Instance.OnTimerStarted(this);
-			return IPacket.CompletedTask;
+			throw new NotImplementedException();
 		}
 	}
 }

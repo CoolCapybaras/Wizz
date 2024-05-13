@@ -80,38 +80,44 @@ public class LocalClient : MonoBehaviour
 				case 1:
 					packetQueue.Enqueue(MessagePacket.Deserialize(data));
 					break;
-				case 11:
+				case 13:
 					packetQueue.Enqueue(AuthResultPacket.Deserialize(data));
 					break;
-				case 12:
+				case 14:
 					packetQueue.Enqueue(SearchResultPacket.Deserialize(data));
 					break;
-				case 13:
+				case 15:
 					packetQueue.Enqueue(LobbyJoinedPacket.Deserialize(data));
 					break;
-				case 14:
+				case 16:
 					packetQueue.Enqueue(ClientJoinedPacket.Deserialize(data));
 					break;
-				case 15:
+				case 17:
 					packetQueue.Enqueue(ClientLeavedPacket.Deserialize(data));
 					break;
-				case 16:
+				case 18:
 					packetQueue.Enqueue(GameStartedPacket.Deserialize(data));
 					break;
-				case 17:
+				case 19:
 					packetQueue.Enqueue(GameEndedPacket.Deserialize(data));
 					break;
-				case 18:
+				case 20:
 					packetQueue.Enqueue(TimerStartedPacket.Deserialize(data));
 					break;
-				case 19:
+				case 21:
+					packetQueue.Enqueue(ShowQuestionPacket.Deserialize(data));
+					break;
+				case 22:
 					packetQueue.Enqueue(RoundStartedPacket.Deserialize(data));
 					break;
-				case 20:
+				case 23:
 					packetQueue.Enqueue(RoundEndedPacket.Deserialize(data));
 					break;
-				case 21:
+				case 24:
 					packetQueue.Enqueue(RightAnswerPacket.Deserialize(data));
+					break;
+				case 25:
+					packetQueue.Enqueue(EditQuizResultPacket.Deserialize(data));
 					break;
 			}
 		}

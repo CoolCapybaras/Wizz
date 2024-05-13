@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
 {
 	public class GameEndedPacket : IPacket
 	{
-		public int Id => 17;
+		public int Id => 19;
 
 		public Dictionary<int, int> Score { get; set; }
 

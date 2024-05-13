@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
 {
 	public class RoundEndedPacket : IPacket
 	{
-		public int Id => 20;
+		public int Id => 23;
 
 		public Dictionary<int, int> Score { get; set; }
 

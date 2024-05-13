@@ -3,9 +3,9 @@ using WizzServer.Models;
 
 namespace Net.Packets.Clientbound
 {
-    public class ClientJoinedPacket : IPacket
+	public class ClientJoinedPacket : IPacket
 	{
-		public int Id => 14;
+		public int Id => 16;
 
 		public ClientDTO Client { get; set; }
 
