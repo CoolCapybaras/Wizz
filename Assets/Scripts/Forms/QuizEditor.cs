@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Net.Packets.Serverbound;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,11 @@ public class QuizEditor : MonoBehaviour, IForm
         public TMP_InputField quizHashtags;
         public Transform questionsLayout;
         public GameObject questionPrefab;
+
+        public Transform hashtagsLayout;
+        public GameObject hashtagsPrefab;
+
+        public VerticalLayoutGroup mainLayout;
     }
 
     public Form form;
@@ -64,7 +70,7 @@ public class QuizEditor : MonoBehaviour, IForm
 
         var i = questions.Count - 1;
         questions[i].obj.GetComponent<QuizEditorQuestionHelper>().AnswerIndex = i;
-
+        
         questions[i].count.text = $"{i + 1}.";
         quiz.Questions.Add(new QuizQuestion());
         quiz.Questions[i].Answers = new List<string>();
@@ -73,8 +79,15 @@ public class QuizEditor : MonoBehaviour, IForm
         {
             quiz.Questions[i].Answers.Add(string.Empty);
         }
+
+        UpdateContentSpacing();
     }
 
+    public void UpdateContentSpacing()
+    {
+        form.mainLayout.spacing = form.mainLayout.spacing == 30f ? 30.1f : 30f;
+    }
+    
     public void OnQuizNameValueChanged()
     {
         quiz.Name = form.quizName.text;
@@ -87,10 +100,26 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void OnQuizHashtagsEndEdit()
     {
-        //quiz.
-        //TODO
+        if (quiz.Hashtags.Count == 3)
+        {
+            OverlayManager.Instance.ShowInfo("Максимум 3 хештега", InfoType.Error);
+            return;
+        }
+        
+        if (string.IsNullOrEmpty(form.quizHashtags.text) || string.IsNullOrWhiteSpace(form.quizHashtags.text)) 
+            return;
+        
+        quiz.Hashtags.Add($"#{form.quizHashtags.text}");
+        var obj = Instantiate(form.hashtagsPrefab, form.hashtagsLayout);
+        obj.GetComponent<TextMeshProUGUI>().text = $"#{form.quizHashtags.text}";
+        form.quizHashtags.text = string.Empty;
     }
 
+    public void OnQuizHashtagPressed(string text)
+    {
+        quiz.Hashtags.Remove(text);
+    }
+    
     public void OnQuizImagePressed()
     {
         Helpers.GetTexture((image) =>
@@ -101,7 +130,7 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void OnQuizImageChanged(Texture2D image)
     {
-        quiz.Image = new ByteImage(image.GetRawTextureData());
+        quiz.Image = new ByteImage(image.EncodeToJPG());
         form.quizImage.texture = image;
     }
     
@@ -153,7 +182,7 @@ public class QuizEditor : MonoBehaviour, IForm
     public void OnQuestionImageChanged(Texture2D image, int answerIndex)
     {
         questions[answerIndex].image.texture = image;
-        quiz.Questions[answerIndex].Image = new ByteImage(image.GetRawTextureData());
+        quiz.Questions[answerIndex].Image = new ByteImage(image.EncodeToJPG());
     }
 
     public void OnDeleteQuestionPressed(int answerIndex)
@@ -162,6 +191,8 @@ public class QuizEditor : MonoBehaviour, IForm
         questions.RemoveAt(answerIndex);
         quiz.Questions.RemoveAt(answerIndex);
         RefreshInstantiatedQuestions();
+
+        UpdateContentSpacing();
     }
 
     public void RefreshInstantiatedQuestions()
@@ -182,7 +213,16 @@ public class QuizEditor : MonoBehaviour, IForm
     {
         if(!CheckQuizCorrectness())
             return;
+
+        for (int i = 0; i < quiz.Questions.Count; ++i)
+        {
+            var question = quiz.Questions[i];
+            var temp = (string)question.Answers[question.AnswerIndex].Clone();
+            question.Answers.RemoveAt(question.AnswerIndex);
+            question.Answers.Insert(0, temp);
+        }
         
+        LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = quiz });
     }
 
     public bool CheckQuizCorrectness()
@@ -253,7 +293,15 @@ public class QuizEditor : MonoBehaviour, IForm
     
     public void InitializeForm()
     {
-        quiz = new Quiz();
-        quiz.Questions = new();
+        quiz = new()
+        {
+            Questions = new(),
+            Hashtags = new()
+        };
+
+        for (int i = 0; i < form.questionsLayout.childCount; ++i)
+        {
+            Destroy(form.questionsLayout.GetChild(i).gameObject);
+        }
     }
 }

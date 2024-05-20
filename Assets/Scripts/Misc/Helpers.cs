@@ -15,6 +15,9 @@ public static class Helpers
         };
         var file = StandaloneFileBrowser.OpenFilePanel("Open Image", "", extensions, false);
         var tex = new Texture2D(2, 2);
+        if (string.IsNullOrEmpty(file[0]))
+            return null;
+
         tex.LoadImage(File.ReadAllBytes(file[0]));
         return tex;
     }
@@ -41,7 +44,7 @@ public static class Helpers
     public static void GetTexture(Action<Texture2D> action)
     {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
-        var texture = Helpers.GetTextureFromPC();
+        var texture = GetTextureFromPC();
         action.Invoke(texture);
 #elif UNITY_ANDROID
         Helpers.GetTextureFromAndroid((avatar) =>

@@ -34,7 +34,7 @@ public class ProfileEdit : MonoBehaviour, IForm
         form.avatar.texture = avatarTexture;
     }
 
-    public void OnNicknameChangePressed()
+    public void OnSavePressed()
     {
         if (!UpdateProfilePacket.NameRegex.IsMatch(form.nicknameInputField.text))
         {
@@ -62,7 +62,6 @@ public class ProfileEdit : MonoBehaviour, IForm
     {
         avatarTexture = texture;
         form.avatar.texture = texture;
-        SendChangesToServer();
     }
 
     private void SendChangesToServer()
@@ -70,11 +69,11 @@ public class ProfileEdit : MonoBehaviour, IForm
         LocalClient.instance.SendPacket(new UpdateProfilePacket()
         {
             Name = form.nicknameInputField.text,
-            Image = new ByteImage(avatarTexture.GetRawTextureData()),
+            Image = new ByteImage(avatarTexture.EncodeToJPG()),
             Type = 0
         });
 
-        LocalClient.instance.Image = new ByteImage(avatarTexture.GetRawTextureData());
+        LocalClient.instance.Image = new ByteImage(avatarTexture.EncodeToJPG());
         LocalClient.instance.Name = form.nicknameInputField.text;
     }
 }

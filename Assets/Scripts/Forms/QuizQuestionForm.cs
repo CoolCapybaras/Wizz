@@ -38,7 +38,6 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         if (timerStarted && time >= questionCountdown)
         {
             timerStarted = false;
-            ShowAnswers();
             return;
         }
 
@@ -63,7 +62,7 @@ public class QuizQuestionForm : MonoBehaviour, IForm
     public void OnRoundStarted(RoundStartedPacket packet)
     {
         ++gameManager.currentQuestionIndex;
-        questionCountdown = packet.Delay;
+        questionCountdown = packet.Delay / 1000;
         FormManager.Instance.ChangeForm("quizquestion");
     }
 

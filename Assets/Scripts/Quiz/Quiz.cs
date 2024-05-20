@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WizzServer.Models;
 
 public class Quiz
 {
@@ -9,6 +10,8 @@ public class Quiz
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
+	
+	public List<string> Hashtags { get; set; }
 
 	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
 	{

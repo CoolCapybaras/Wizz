@@ -1,3 +1,5 @@
+using Assets.Scripts.Misc;
+using DG.Tweening;
 using Net.Packets.Clientbound;
 using Net.Packets.Serverbound;
 using System;
@@ -29,6 +31,11 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
         public Color32 rightAnswerColor;
         public Color32 wrongAnswerColor;
+
+        public GameObject resultObj;
+        public TextMeshProUGUI resultText;
+        public TextMeshProUGUI scoreText;
+        public GameObject continueButton;
     }
 
     public Form form;
@@ -51,6 +58,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        form.resultObj.SetActive(false);
         var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
@@ -79,14 +87,39 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void OnRightAnswer(RightAnswerPacket packet)
     {
-        if (answeredIndex == packet.AnswerId)
-            OverlayManager.Instance.ShowInfo("Заглушка для верного ответа", InfoType.Success);
-        else
-            OverlayManager.Instance.ShowInfo("Заглушка для неверного ответа", InfoType.Error);
-
+        PrepareResultUI(packet.AnswerId, packet.RoundScore);
         timerStarted = false;
         HighlightButton(packet.AnswerId);
         SoundManager.Instance.SetLowPassFilter(true, 1);
+    }
+
+    public void PrepareResultUI(int answerId, int roundScore)
+    {
+        form.resultObj.SetActive(true);
+        var sequence = DOTween.Sequence();
+        sequence.Insert(0, form.resultObj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
+            .Insert(0, form.resultObj.transform.DOScale(1, 0.25f).From(2))
+            .Play();
+
+        if (!gameManager.isHost)
+            form.continueButton.SetActive(false);
+
+
+        if (answeredIndex == answerId)
+        {
+            SoundManager.Instance.PlayShortClip("success");
+            form.resultText.text = "Ответ верный!";
+            form.scoreText.text = $"+{roundScore} очков\nЖдем продолжения игры...";
+            form.resultText.color = Colors.yellow;
+        }
+        else
+        {
+            SoundManager.Instance.PlayShortClip("fail");
+            form.resultText.text = "Ответ неверный!";
+            form.scoreText.text = "Ждем продолжение игры...";
+            form.resultText.color = Colors.red;
+        }
+
     }
 
     public void HighlightButton(int index)
@@ -103,6 +136,11 @@ public class AnswerQuestion : MonoBehaviour, IForm
         }
     }
     
+    public void OnContinuePressed()
+    {
+        LocalClient.instance.SendPacket(new ContinueGamePacket());
+    }
+
     public void OnGameEnded(GameEndedPacket packet)
     {
         gameManager.CurrentScore = packet.Score;

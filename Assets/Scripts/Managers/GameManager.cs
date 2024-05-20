@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     public bool isInLobby;
     public bool isInStartedGame;
+    public bool isHost;
     private void Awake()
     {
         Instance = this;
