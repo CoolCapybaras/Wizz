@@ -15,6 +15,12 @@ public class Quiz
 
 	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
 	{
+		if (Id == 0)
+		{
+			stream.WriteByte(0);
+			return;
+		}
+
 		stream.WriteVarInt(Id);
 		stream.WriteString(Name);
 		stream.WriteImage(Image);
@@ -36,8 +42,12 @@ public class Quiz
 
 	public static Quiz Deserialize(WizzStream stream)
 	{
+		int quizId = stream.ReadVarInt();
+		if (quizId == 0)
+			return null!;
+
 		var quiz = new Quiz();
-		quiz.Id = stream.ReadVarInt();
+		quiz.Id = quizId;
 		quiz.Name = stream.ReadString();
 		quiz.Image = stream.ReadImage();
 		quiz.Description = stream.ReadString();

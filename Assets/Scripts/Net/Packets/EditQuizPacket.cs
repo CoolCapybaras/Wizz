@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Net.Packets.Serverbound
+namespace Net.Packets
 {
+	public enum EditQuizType
+	{
+		Get,
+		Upload,
+		Delete,
+		Publish
+	}
+
 	public class EditQuizPacket : IPacket
 	{
 		public int Id => 11;
 
+		public EditQuizType Type { get; set; }
 		public int QuizId { get; set; }
 		public Quiz Quiz { get; set; }
 
@@ -26,6 +35,7 @@ namespace Net.Packets.Serverbound
 
 		public void Populate(WizzStream stream)
 		{
+			Type = (EditQuizType)stream.ReadVarInt();
 			QuizId = stream.ReadVarInt();
 			Quiz = Quiz.Deserialize(stream);
 		}
@@ -33,6 +43,7 @@ namespace Net.Packets.Serverbound
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
+			packetStream.WriteVarInt(Type);
 			packetStream.WriteVarInt(QuizId);
 			Quiz.Serialize(packetStream, false);
 

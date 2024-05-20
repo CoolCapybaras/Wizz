@@ -80,6 +80,9 @@ public class LocalClient : MonoBehaviour
 				case 1:
 					packetQueue.Enqueue(MessagePacket.Deserialize(data));
 					break;
+				case 11:
+					packetQueue.Enqueue(EditQuizPacket.Deserialize(data));
+					break;
 				case 13:
 					packetQueue.Enqueue(AuthResultPacket.Deserialize(data));
 					break;
@@ -115,9 +118,6 @@ public class LocalClient : MonoBehaviour
 					break;
 				case 24:
 					packetQueue.Enqueue(RightAnswerPacket.Deserialize(data));
-					break;
-				case 25:
-					packetQueue.Enqueue(EditQuizResultPacket.Deserialize(data));
 					break;
 			}
 		}

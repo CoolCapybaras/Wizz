@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Net.Packets.Serverbound;
+using Net.Packets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
