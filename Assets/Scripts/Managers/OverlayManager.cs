@@ -41,7 +41,7 @@ public class OverlayManager : MonoBehaviour
         var obj = Instantiate(form.infoPrefab, form.infoLayout);
         obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
         obj.transform.GetChild(1).GetComponent<Image>().sprite = form.infoSprites[(int)type];
-
+        
         SoundManager.Instance.PlayShortClip(type == InfoType.Success ? "success" : "fail");
     }
 
@@ -59,10 +59,43 @@ public class OverlayManager : MonoBehaviour
 
     public void OnMainMenuPressed()
     {
-        GameManager.Instance.EnsureLeavedLobby();
-        GameManager.Instance.EnsureLeavedStartedGame();
+        EnsureLeaved();
 
         FormManager.Instance.ChangeForm("mainmenu", FormManager.AnimType.Out);
+    }
+
+    public void OnLogoutPressed()
+    {
+        EnsureLeaved();
+
+        LocalClient.instance.SendPacket(new LogoutPacket());
+        FormManager.Instance.ChangeForm("login", FormManager.AnimType.Out);
+
+        if (PlayerPrefs.HasKey("token"))
+        {
+            PlayerPrefs.DeleteKey("token");
+            PlayerPrefs.Save();
+        }
+        
+        LocalClient.instance.Authorized = false;
+        LocalClient.instance.Name = null;
+        LocalClient.instance.Image = null;
+
+        SetActiveBottomButtons(false);
+        SetActiveTopButtons(false);
+    }
+
+    public void OnNewQuizPressed()
+    {
+        EnsureLeaved();
+
+        FormManager.Instance.ChangeForm("quizeditor");
+    }
+
+    public void EnsureLeaved()
+    {
+        GameManager.Instance.EnsureLeavedLobby();
+        GameManager.Instance.EnsureLeavedStartedGame();
     }
 
     public void OnProfileEditPressed()

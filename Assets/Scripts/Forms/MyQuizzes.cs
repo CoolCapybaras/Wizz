@@ -69,11 +69,11 @@ public class MyQuizzes : MonoBehaviour, IForm
             obj.transform.GetChild(0).GetComponent<RawImage>().texture = quiz.Image.GetTexture();
             transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = quiz.Description;
             transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = quiz.Name;
-            // TODO: transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = quiz.Hashtags;
+            // TODO: transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = quiz.Hashtags;
             if (quiz.AuthorId != LocalClient.instance.Id)
             {
-                transform.GetChild(5).gameObject.SetActive(false);
-                transform.GetChild(6).gameObject.SetActive(false);
+                obj.transform.GetChild(3).gameObject.SetActive(false);
+                obj.transform.GetChild(4).gameObject.SetActive(false);
             }
         }
     }

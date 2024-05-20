@@ -1,3 +1,4 @@
+using Net.Packets.Serverbound;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,6 +57,11 @@ public class Rating : MonoBehaviour, IForm
             form.PlayerPrefabs[i].SetActive(false);
     }
     
+    public void OnContinuePressed()
+    {
+        LocalClient.instance.SendPacket(new ContinueGamePacket());
+    }
+
     public void InitializeForm()
     {
         InstantiatePlayers();

@@ -38,7 +38,6 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         if (timerStarted && time >= questionCountdown)
         {
             timerStarted = false;
-            ShowAnswers();
             return;
         }
 
@@ -49,13 +48,12 @@ public class QuizQuestionForm : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
-        var question = gameManager.currentQuestion;
+        var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
-        form.questionsCount.text = $"Вопрос {gameManager.currentQuestionCount} из {gameManager.currentQuiz.QuestionsCount}";
+        form.questionsCount.text = $"Вопрос {gameManager.currentQuestionIndex} из {gameManager.currentQuiz.QuestionCount}";
 
         time = 0;
-        questionCountdown = question.Countdown;
         timerStarted = true;
         SoundManager.Instance.StartCountdown((int)questionCountdown);
         SoundManager.Instance.StopMusic();
@@ -63,8 +61,8 @@ public class QuizQuestionForm : MonoBehaviour, IForm
 
     public void OnRoundStarted(RoundStartedPacket packet)
     {
-        ++gameManager.currentQuestionCount;
-        gameManager.currentQuestion = packet.Question;
+        ++gameManager.currentQuestionIndex;
+        questionCountdown = packet.Delay / 1000;
         FormManager.Instance.ChangeForm("quizquestion");
     }
 

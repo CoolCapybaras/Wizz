@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1523554130978611776}
   - component: {fileID: 240259458821206169}
   - component: {fileID: 2029843578202573207}
+  - component: {fileID: 2942320651417212671}
   m_Layer: 5
   m_Name: Hashtag
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "#\u0445\u044D\u0448\u0442\u0435\u0433"
+  m_text: "#\u0445\u044D\u0448\u0442\u0435\u0433\u0445\u044D\u0448\u0442\u0435\u0433\u0445\u044D\u0448\u0442\u0435\u0433\u0445\u044D\u0448\u0442\u0435\u0433\u0445\u044D\u0448\u0442\u0435\u0433"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4f087b5e6d68acd47ac1e8e11c5e88bb, type: 2}
   m_sharedMaterial: {fileID: -8411453224797706854, guid: 4f087b5e6d68acd47ac1e8e11c5e88bb, type: 2}
@@ -79,12 +80,12 @@ MonoBehaviour:
     rgba: 4294965750
   m_fontColor: {r: 0.9647059, g: 0.9764706, b: 1, a: 1}
   m_enableVertexGradient: 0
-  m_colorMode: 3
+  m_colorMode: 1
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 0.8867924, g: 0, b: 0, a: 1}
+    topRight: {r: 1, g: 0.7318172, b: 0.023584902, a: 1}
+    bottomLeft: {r: 0.8867924, g: 0, b: 0, a: 1}
+    bottomRight: {r: 1, g: 0.7318172, b: 0.023584902, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -94,12 +95,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 14.65
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 11.3
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -179,7 +180,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 240259458821206169}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2942320651417212671}
+        m_TargetAssemblyTypeName: HashtagButton, Assembly-CSharp
+        m_MethodName: OnPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2942320651417212671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333434721995457335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36dd5f039b49f3e4c91914ce38d623fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4855893526597254753
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,8 +270,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 1010507eeb36cd341b33df761ee26d0a, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -254,4 +279,4 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 30

@@ -6,7 +6,7 @@ namespace Net.Packets.Serverbound
 {
 	public class UpdateProfilePacket : IPacket
 	{
-		public static readonly Regex NameRegex = new("^[A-Za-zА-Яа-я0-9_]{3,18}$");
+		public static readonly Regex NameRegex = new("^[A-Za-zА-Яа-я0-9_]{3,24}$");
 
 		public int Id => 10;
 

@@ -64,9 +64,7 @@ public class Lobby : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
-        if (gameManager.currentClients.Count != 1)
-            form.startGameButton.SetActive(false);
-
+        gameManager.isHost = false;
         form.quizNameText.text = $"Лобби \"{gameManager.currentQuiz.Name}\"";
         form.lobbyCodeText.text = $"Код доступа: #{gameManager.currentLobbyId}";
         form.quizDescriptionText.text = gameManager.currentQuiz.Description;
@@ -76,6 +74,13 @@ public class Lobby : MonoBehaviour, IForm
         form.quizCard.description.text = gameManager.currentQuiz.Description;
         form.quizCard.image.texture = gameManager.currentQuiz.Image.GetTexture();
         // TODO: form.quizCard.hashtags заполнить
+
+        if (gameManager.currentClients.Count != 1)
+        {
+            form.startGameButton.SetActive(false);
+            return;
+        }
+        gameManager.isHost = true;
     }
 
     public void OnClientJoined(ClientJoinedPacket packet)
@@ -111,6 +116,7 @@ public class Lobby : MonoBehaviour, IForm
     public void OnGameStarted(GameStartedPacket packet)
     {
         FormManager.Instance.ChangeForm("quizloading");
+        gameManager.questions = packet.QuizQuestions;
         gameManager.isInStartedGame = true;
     }
 }

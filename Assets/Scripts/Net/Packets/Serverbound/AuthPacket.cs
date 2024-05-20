@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WizzServer.Models;
 
 namespace Net.Packets.Serverbound
 {
@@ -14,7 +15,6 @@ namespace Net.Packets.Serverbound
 	public class AuthPacket : IPacket
 	{
 		public int Id => 2;
-
 		public AuthType Type { get; set; }
 		public string Name { get; set; }
 		public string Token { get; set; }

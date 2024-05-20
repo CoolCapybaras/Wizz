@@ -1,4 +1,7 @@
-﻿public class Quiz
+﻿using System.Collections.Generic;
+using WizzServer.Models;
+
+public class Quiz
 {
 	public int Id { get; set; }
 	public string Name { get; set; }
@@ -7,6 +10,8 @@
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
+	
+	public List<string> Hashtags { get; set; }
 
 	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
 	{
@@ -23,8 +28,8 @@
 		}
 		else
 		{
-			stream.WriteVarInt(Questions.Length);
-			for (int i = 0; i < Questions.Length; i++)
+			stream.WriteVarInt(Questions.Count);
+			for (int i = 0; i < Questions.Count; i++)
 				Questions[i].Serialize(stream);
 		}
 	}
@@ -40,9 +45,9 @@
 		quiz.AuthorId = stream.ReadVarInt();
 
 		int count = stream.ReadVarInt();
-		quiz.Questions = new QuizQuestion[count];
+		quiz.Questions = new List<QuizQuestion>();
 		for (int i = 0; i < count; i++)
-			quiz.Questions[i] = QuizQuestion.Deserialize(stream);
+			quiz.Questions.Add(QuizQuestion.Deserialize(stream));
 
 		return quiz;
 	}

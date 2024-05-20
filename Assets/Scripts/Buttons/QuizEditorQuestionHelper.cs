@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class QuizEditorQuestionHelper : MonoBehaviour
@@ -12,8 +13,16 @@ public class QuizEditorQuestionHelper : MonoBehaviour
     public void OnPressed()
     {
         expanded = !expanded;
-        gameObject.GetComponent<RectTransform>().sizeDelta = expanded ? expandedSize : minimizedSize;
-        fakeButton.localRotation = expanded ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0);
+
+        var sequence = DOTween.Sequence();
+        if (expanded)
+            sequence.Insert(0, gameObject.GetComponent<RectTransform>().DOSizeDelta(expandedSize, 0.25f))
+                .Insert(0, fakeButton.DORotateQuaternion(Quaternion.Euler(0, 0, 180), 0.25f));
+        else
+            sequence.Insert(0, gameObject.GetComponent<RectTransform>().DOSizeDelta(minimizedSize, 0.25f))
+                .Insert(0, fakeButton.DORotateQuaternion(Quaternion.Euler(0, 0, 0), 0.25f));
+
+        sequence.Play();
     }
     
     public int AnswerIndex;

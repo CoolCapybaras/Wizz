@@ -14,11 +14,12 @@ public class GameManager : MonoBehaviour
     public List<ClientDTO> currentClients = new();
     public Dictionary<int, int> CurrentScore = new();
 
-    public QuizQuestion currentQuestion;
-    public int currentQuestionCount;
+    public QuizQuestion[] questions;
+    public int currentQuestionIndex;
 
     public bool isInLobby;
     public bool isInStartedGame;
+    public bool isHost;
     private void Awake()
     {
         Instance = this;

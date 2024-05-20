@@ -45,7 +45,9 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
+			QuizQuestionForm.Instance.ShowAnswers();
+
+			return IPacket.CompletedTask;
 		}
 	}
 }
