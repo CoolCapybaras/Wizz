@@ -213,16 +213,17 @@ public class QuizEditor : MonoBehaviour, IForm
     {
         if(!CheckQuizCorrectness())
             return;
-
-        for (int i = 0; i < quiz.Questions.Count; ++i)
+        var formedQuiz = quiz.Clone();
+        for (int i = 0; i < formedQuiz.Questions.Count; ++i)
         {
-            var question = quiz.Questions[i];
+            var question = formedQuiz.Questions[i];
             var temp = (string)question.Answers[question.AnswerIndex].Clone();
             question.Answers.RemoveAt(question.AnswerIndex);
             question.Answers.Insert(0, temp);
         }
         
-        LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = quiz });
+        
+        LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = formedQuiz, Type = EditQuizType.Upload });
     }
 
     public bool CheckQuizCorrectness()

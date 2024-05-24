@@ -40,7 +40,7 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     public void OnSearchEndEdit(string str)
     {
-        LocalClient.instance.SendPacket(new SearchPacket() { QuizName = form.searchInputField.text });
+        LocalClient.instance.SendPacket(new SearchPacket() { QuizName = form.searchInputField.text, Count = 10});
     }
 
     public void RemoveQuizzesFromLayout()

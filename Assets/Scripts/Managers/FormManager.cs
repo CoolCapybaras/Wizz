@@ -61,7 +61,7 @@ public class FormManager : MonoBehaviour
             {
                 SetActiveForm(id);
             })
-            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(0.5f))
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(0.8f))
             .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
         return inSequence;
     }
@@ -78,7 +78,7 @@ public class FormManager : MonoBehaviour
             {
                 SetActiveForm(id);
             })
-            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(3f))
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(1.25f))
             .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
         return outSequence;
     }

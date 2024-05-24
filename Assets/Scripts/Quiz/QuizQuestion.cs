@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public enum QuizQuestionType
 {
@@ -39,6 +40,18 @@ public class QuizQuestion
 
 		question.Image = stream.ReadImage();
 		question.Time = stream.ReadVarInt();
+		return question;
+	}
+
+	public QuizQuestion Clone()
+	{
+		var question = new QuizQuestion();
+		question.Type = Type;
+		question.Question = Question;
+		question.Answers = Answers.ToList();
+		question.Image = new ByteImage(Image.data);
+		question.Time = Time;
+		question.AnswerIndex = AnswerIndex;
 		return question;
 	}
 }
