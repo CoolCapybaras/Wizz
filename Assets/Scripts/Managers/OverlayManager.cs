@@ -89,7 +89,8 @@ public class OverlayManager : MonoBehaviour
     {
         EnsureLeaved();
 
-        FormManager.Instance.ChangeForm("quizeditor");
+        MyQuizzes.Instance.SetQuizzesList(0);
+        FormManager.Instance.ChangeForm("myquizzes");
     }
 
     public void EnsureLeaved()

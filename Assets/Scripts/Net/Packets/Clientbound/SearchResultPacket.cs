@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
 {
@@ -57,7 +58,10 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			MyQuizzes.Instance.OnSearchResult(this);
+			if(FormManager.Instance.activeForm.Id == "myquizzes")
+				MyQuizzes.Instance.OnSearchResult(this);
+			else if(FormManager.Instance.activeForm.Id == "mainmenu")
+				MyQuizzes
 			return IPacket.CompletedTask;
 		}
 	}

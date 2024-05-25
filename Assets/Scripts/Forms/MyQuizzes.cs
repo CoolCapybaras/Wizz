@@ -40,7 +40,10 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     public void OnSearchEndEdit(string str)
     {
-        LocalClient.instance.SendPacket(new SearchPacket() { QuizName = form.searchInputField.text, Count = 10});
+        if(type == QuizzesType.Server)
+            LocalClient.instance.SendPacket(new SearchPacket() { QuizName = form.searchInputField.text, Count = 10});
+        else
+            LocalClient.instance.SendPacket(new SearchPacket() {QuizName = form.searchInputField.text, Count = 10, IsAuthor = true});
     }
 
     public void RemoveQuizzesFromLayout()
@@ -81,12 +84,12 @@ public class MyQuizzes : MonoBehaviour, IForm
     public void InitializeForm()
     {
         RemoveQuizzesFromLayout();
-        OnSearchEndEdit(string.Empty);
     }
 
     public void SetQuizzesList(int type)
     {
         this.type = (QuizzesType)type;
+        OnSearchEndEdit(string.Empty);
     }
 
     public void OnSearchResult(SearchResultPacket packet)

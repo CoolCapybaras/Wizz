@@ -28,7 +28,7 @@ public class FormManager : MonoBehaviour
     }
 
     public List<Form> forms;
-    private Form activeForm;
+    public Form activeForm;
 
     public void ChangeForm(string id, AnimType animType = AnimType.In)
     {

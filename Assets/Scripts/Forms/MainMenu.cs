@@ -14,6 +14,8 @@ public class MainMenu : MonoBehaviour, IForm
     {
         public TextMeshProUGUI topGreetingText;
         public Transform myQuizzesLayout;
+
+        public GameObject quizPrefab;
     }
 
     public static MainMenu Instance;
@@ -44,5 +46,11 @@ public class MainMenu : MonoBehaviour, IForm
             .Insert(0, form.myQuizzesLayout.GetComponent<CanvasGroup>().DOFade(1, 1).From(0))
             .Play();
         form.topGreetingText.text = $"Пора создавать новое, {localClient.Name}!";
+    }
+
+    public void InstantiateQuizzes()
+    {
+        var quizzes = new List<Quiz>();
+        quizzes.
     }
 }

@@ -2,6 +2,14 @@
 using System.Linq;
 using WizzServer.Models;
 
+
+public enum ModerationStatus
+{
+	NotModerated,
+	InModeration,
+	ModerationComplete
+}
+
 public class Quiz
 {
 	public int Id { get; set; }
@@ -10,6 +18,7 @@ public class Quiz
 	public string Description { get; set; }
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
+	public ModerationStatus ModerationStatus { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
 	
 	public List<string> Hashtags { get; set; }
@@ -22,6 +31,7 @@ public class Quiz
 		stream.WriteString(Description);
 		stream.WriteVarInt(QuestionCount);
 		stream.WriteVarInt(AuthorId);
+		stream.WriteVarInt(ModerationStatus);
 
 		if (ignoreQuestions)
 		{
@@ -35,6 +45,8 @@ public class Quiz
 		}
 	}
 
+
+
 	public static Quiz Deserialize(WizzStream stream)
 	{
 		var quiz = new Quiz();
@@ -44,6 +56,7 @@ public class Quiz
 		quiz.Description = stream.ReadString();
 		quiz.QuestionCount = stream.ReadVarInt();
 		quiz.AuthorId = stream.ReadVarInt();
+		quiz.ModerationStatus = (ModerationStatus)stream.ReadVarInt();
 
 		int count = stream.ReadVarInt();
 		quiz.Questions = new List<QuizQuestion>();
