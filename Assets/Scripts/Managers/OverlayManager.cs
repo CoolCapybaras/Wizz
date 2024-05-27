@@ -39,8 +39,8 @@ public class OverlayManager : MonoBehaviour
     public void ShowInfo(string text, InfoType type)
     {
         var obj = Instantiate(form.infoPrefab, form.infoLayout);
-        obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
-        obj.transform.GetChild(1).GetComponent<Image>().sprite = form.infoSprites[(int)type];
+        obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = text;
+        obj.transform.GetChild(0).GetComponent<Image>().sprite = form.infoSprites[(int)type];
         
         SoundManager.Instance.PlayShortClip(type == InfoType.Success ? "success" : "fail");
     }
@@ -89,7 +89,7 @@ public class OverlayManager : MonoBehaviour
     {
         EnsureLeaved();
 
-        MyQuizzes.Instance.SetQuizzesList(0);
+        MyQuizzes.Instance.SetQuizzesList(1);
         FormManager.Instance.ChangeForm("myquizzes");
     }
 

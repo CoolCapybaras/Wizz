@@ -2,6 +2,7 @@ using Net.Packets.Clientbound;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,13 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         public TextMeshProUGUI questionsCount;
 
         public Image timerImage;
+
+        public GameObject questionTypeObj;
+        public Image questionTypeImage;
+        public TextMeshProUGUI questionTypeText;
+        
+        public Sprite defaultQuestionSprite;
+        public Sprite trueOrFalseQuestionSprite;
     }
 
     public Form form;
@@ -52,17 +60,35 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
         form.questionsCount.text = $"Вопрос {gameManager.currentQuestionIndex} из {gameManager.currentQuiz.QuestionCount}";
-
+        AnimateQuestionType();
         time = 0;
         timerStarted = true;
         SoundManager.Instance.StartCountdown((int)questionCountdown);
         SoundManager.Instance.StopMusic();
     }
 
+    public void AnimateQuestionType()
+    {
+        form.questionTypeObj.SetActive(true);
+        var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
+        
+        switch (question.Type)
+        {
+            case QuizQuestionType.Default:
+                form.questionTypeText.text = "Обычный вопрос";
+                form.questionTypeImage.sprite = form.defaultQuestionSprite;
+                break;
+            case QuizQuestionType.TrueOrFalse:
+                form.questionTypeText.text = "Правда или ложь";
+                form.questionTypeImage.sprite = form.trueOrFalseQuestionSprite;
+                break;
+        }
+    }
+
     public void OnRoundStarted(RoundStartedPacket packet)
     {
         ++gameManager.currentQuestionIndex;
-        questionCountdown = packet.Delay / 1000;
+        questionCountdown = packet.Delay;
         FormManager.Instance.ChangeForm("quizquestion");
     }
 

@@ -7,7 +7,8 @@ public enum ModerationStatus
 {
 	NotModerated,
 	InModeration,
-	ModerationComplete
+	ModerationAccepted,
+	ModerationRejected
 }
 
 public class Quiz

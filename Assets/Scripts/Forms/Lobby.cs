@@ -58,7 +58,7 @@ public class Lobby : MonoBehaviour, IForm
         {
             var obj = Instantiate(form.playerPrefab, form.playersLayout);
             obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = player.Name;
-            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image.GetTexture();
+            obj.transform.GetChild(1).GetChild(0).GetComponent<RawImage>().texture = player.Image.GetTexture();
         }
     }
 

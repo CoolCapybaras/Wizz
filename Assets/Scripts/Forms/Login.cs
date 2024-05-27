@@ -21,6 +21,12 @@ public class Login : MonoBehaviour, IForm
 
     public void OnAnonLoginPressed()
     {
+        if (!UpdateProfilePacket.NameRegex.IsMatch(inputField.text))
+        {
+            OverlayManager.Instance.ShowInfo("Имя должно быть от 3 до 24 символов и содержать только буквы или цифры", InfoType.Error);
+            return;
+        }
+        
         localClient.SendPacket(new AuthPacket()
         {
             Type = AuthType.Anonymous,
@@ -49,7 +55,7 @@ public class Login : MonoBehaviour, IForm
         if (packet.Flags.HasFlag(AuthResultFlags.Ok))
         {
             Debug.Log("Authresult OK");
-            OnAuthSuccessful(packet.Name, packet.Id, packet.Image);
+            OnAuthSuccessful(packet.Name, packet.ClientId, packet.Image);
         }
 
         if (packet.Flags.HasFlag(AuthResultFlags.HasToken))

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Net.Packets;
 using TMPro;
 using UnityEngine;
@@ -25,11 +26,15 @@ public class QuizEditor : MonoBehaviour, IForm
         public TMP_InputField quizHashtags;
         public Transform questionsLayout;
         public GameObject questionPrefab;
+        public GameObject defaultAnswerPrefab;
+        public GameObject trueFalseAnswerPrefab;
 
         public Transform hashtagsLayout;
         public GameObject hashtagsPrefab;
 
         public VerticalLayoutGroup mainLayout;
+
+        public Sprite defaultSprite;
     }
 
     public Form form;
@@ -48,39 +53,73 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public Quiz quiz;
     
-    public void AddQuestion()
+    private Question AddQuestion(QuizQuestionType type, bool applyToQuiz = true)
     {
         var obj = Instantiate(form.questionPrefab, form.questionsLayout);
         
-        var answers = new List<GameObject>();
-        for (int j = 0; j < obj.transform.GetChild(3).childCount; j++)
-        {
-            answers.Add(obj.transform.GetChild(3).GetChild(j).gameObject);
-        }
-
-        questions.Add(new Question()
+        questions.Add(new Question
         {
             obj = obj,
             count = obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),
             question = obj.transform.GetChild(1).GetComponent<TMP_InputField>(),
             image = obj.transform.GetChild(5).GetComponent<RawImage>(),
-            answers = answers,
             time = obj.transform.GetChild(6).GetChild(0).GetComponent<TMP_InputField>()
         });
-
         var i = questions.Count - 1;
+        questions[i].answers = InstantiateAnswers(obj.transform.GetChild(3), type, i);
         questions[i].obj.GetComponent<QuizEditorQuestionHelper>().AnswerIndex = i;
-        
         questions[i].count.text = $"{i + 1}.";
-        quiz.Questions.Add(new QuizQuestion());
-        quiz.Questions[i].Answers = new List<string>();
-        quiz.Questions[i].AnswerIndex = -1;
-        for (int m = 0; m < answers.Count; m++)
+        
+        if (applyToQuiz)
         {
-            quiz.Questions[i].Answers.Add(string.Empty);
+            quiz.Questions.Add(new QuizQuestion());
+            quiz.Questions[i].Answers = new List<string>();
+            quiz.Questions[i].AnswerIndex = -1;
+            quiz.Questions[i].Type = type;
+            
+            for (int m = 0; m < questions[i].answers.Count; m++)
+            {
+                if (type == QuizQuestionType.Default)
+                {
+                    quiz.Questions[i].Answers.Add(string.Empty);
+                    continue;
+                }
+
+                quiz.Questions[i].Answers.Add(m == 0 ? "Правда" : "Ложь");
+            }
         }
 
         UpdateContentSpacing();
+
+        return questions.Last();
+    }
+
+    private List<GameObject> InstantiateAnswers(Transform parent, QuizQuestionType type, int answerIndex)
+    {
+        DestroyLayoutChildren(parent);
+        
+        var answers = new List<GameObject>();
+        for (int j = 0; j < (type == QuizQuestionType.Default ? 4 : 2); ++j)
+        {
+            var answerObj = Instantiate(type == QuizQuestionType.Default
+                    ? form.defaultAnswerPrefab
+                    : form.trueFalseAnswerPrefab, 
+                parent);
+
+            answerObj.GetComponent<QuizAnswerHelper>().AnswerIndex = answerIndex;
+            answers.Add(answerObj);
+            if (type == QuizQuestionType.Default)
+                continue;
+            answerObj.transform.GetChild(1).GetComponent<TMP_InputField>().text = j == 0 ? "Правда" : "Ложь";
+        }
+
+        return answers;
+    }
+    
+    
+    public void OnAddQuestionPressed(int questionType)
+    {
+        AddQuestion((QuizQuestionType)questionType);
     }
 
     public void UpdateContentSpacing()
@@ -122,10 +161,7 @@ public class QuizEditor : MonoBehaviour, IForm
     
     public void OnQuizImagePressed()
     {
-        Helpers.GetTexture((image) =>
-        {
-            OnQuizImageChanged(image);
-        });
+        Helpers.GetTexture(OnQuizImageChanged);
     }
 
     public void OnQuizImageChanged(Texture2D image)
@@ -179,7 +215,7 @@ public class QuizEditor : MonoBehaviour, IForm
         });
     }
 
-    public void OnQuestionImageChanged(Texture2D image, int answerIndex)
+    private void OnQuestionImageChanged(Texture2D image, int answerIndex)
     {
         questions[answerIndex].image.texture = image;
         quiz.Questions[answerIndex].Image = new ByteImage(image.EncodeToJPG());
@@ -195,7 +231,7 @@ public class QuizEditor : MonoBehaviour, IForm
         UpdateContentSpacing();
     }
 
-    public void RefreshInstantiatedQuestions()
+    private void RefreshInstantiatedQuestions()
     {
         for (int i = 0; i < questions.Count; i++)
         {
@@ -206,7 +242,10 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void OnQuizDeletePressed()
     {
+        if (quiz.Id != 0)
+            LocalClient.instance.SendPacket(new EditQuizPacket {Type = EditQuizType.Delete, QuizId = quiz.Id});
         
+        FormManager.Instance.ChangeForm("mainmenu");
     }
 
     public void SaveQuiz()
@@ -214,19 +253,17 @@ public class QuizEditor : MonoBehaviour, IForm
         if(!CheckQuizCorrectness())
             return;
         var formedQuiz = quiz.Clone();
-        for (int i = 0; i < formedQuiz.Questions.Count; ++i)
+        foreach (var question in formedQuiz.Questions)
         {
-            var question = formedQuiz.Questions[i];
             var temp = (string)question.Answers[question.AnswerIndex].Clone();
             question.Answers.RemoveAt(question.AnswerIndex);
             question.Answers.Insert(0, temp);
         }
         
-        
         LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = formedQuiz, Type = EditQuizType.Upload });
     }
 
-    public bool CheckQuizCorrectness()
+    private bool CheckQuizCorrectness()
     {
         var flag = true;
         if (string.IsNullOrEmpty(quiz.Name) || quiz.Name.Length > 48 || quiz.Name.Length < 3)
@@ -291,18 +328,80 @@ public class QuizEditor : MonoBehaviour, IForm
         }
         return flag;
     }
-    
-    public void InitializeForm()
+
+    public void OnEditQuizPressed(int quizId)
     {
+        LocalClient.instance.SendPacket(new EditQuizPacket {Type = EditQuizType.Get, QuizId = quizId});
+    }
+
+    public void OnGetQuizResult(EditQuizPacket packet)
+    {
+        questions = new();
+        FormManager.Instance.ChangeForm("quizeditor");
+        quiz = packet.Quiz;
+        FillUI();
+    }
+
+    private void DestroyLayoutChildren(Transform layout)
+    {
+        for (int i = 0; i < layout.childCount; ++i)
+            Destroy(layout.GetChild(i).gameObject);
+    }
+    
+    private void FillUI()
+    {
+        DestroyLayoutChildren(form.questionsLayout);
+        DestroyLayoutChildren(form.hashtagsLayout);
+        form.quizImage.texture = quiz.Image == null ? form.defaultSprite.texture : quiz.Image.GetTexture();
+        form.quizName.text = quiz.Name;
+        form.quizDescription.text = quiz.Description;
+        form.quizHashtags.text = string.Empty;
+
+        if (quiz == null)
+            return;
+
+        FillQuestionsUI();
+        FillHashtagsUI();
+    }
+
+    private void FillQuestionsUI()
+    {
+        foreach (var t in quiz.Questions)
+        {
+            var question = AddQuestion(t.Type, false);
+            question.question.text = t.Question;
+            question.time.text = t.Time.ToString();
+            question.image.texture = t.Image.GetTexture();
+            for (int j = 0; j < question.answers.Count; ++j)
+            {
+                question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text =
+                    t.Answers[j];
+                
+                if (j == 0)
+                    question.answers[j].GetComponent<Toggle>().isOn = true;
+            }
+        }
+    }
+
+    private void FillHashtagsUI()
+    {
+        quiz.Hashtags = new(); // TODO: убрать
+        // TODO
+    }
+
+    public void CreateNewQuiz()
+    {
+        questions = new();
         quiz = new()
         {
             Questions = new(),
-            Hashtags = new()
+            Hashtags = new(),
         };
-
-        for (int i = 0; i < form.questionsLayout.childCount; ++i)
-        {
-            Destroy(form.questionsLayout.GetChild(i).gameObject);
-        }
+        
+        FillUI();
+    }
+    
+    public void InitializeForm()
+    {
     }
 }

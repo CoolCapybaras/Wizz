@@ -58,10 +58,11 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			if(FormManager.Instance.activeForm.Id == "myquizzes")
+			if (FormManager.Instance.activeForm.Id == "myquizzes")
 				MyQuizzes.Instance.OnSearchResult(this);
-			else if(FormManager.Instance.activeForm.Id == "mainmenu")
-				MyQuizzes
+			else if (FormManager.Instance.activeForm.Id == "mainmenu")
+				MainMenu.Instance.OnSearchResult(this);
+			
 			return IPacket.CompletedTask;
 		}
 	}

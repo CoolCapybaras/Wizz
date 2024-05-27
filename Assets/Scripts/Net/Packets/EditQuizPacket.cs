@@ -64,9 +64,15 @@ namespace Net.Packets
 			if (Type == EditQuizType.Upload)
 			{
 				QuizEditor.Instance.quiz.Id = QuizId;
-				LocalClient.instance.SendPacket(new EditQuizPacket{ Type = EditQuizType.Publish, QuizId = QuizId });
+				OverlayManager.Instance.ShowInfo("Викторина успешно сохранена!\n" +
+				                                 "Вы в любой момент можете её отправить " +
+				                                 "на модерацию из раздела \"Мои викторины\"", InfoType.Success);
 			}
 
+			if (Type == EditQuizType.Get)
+			{
+				QuizEditor.Instance.OnGetQuizResult(this);
+			}
 			return IPacket.CompletedTask;
 		}
 	}

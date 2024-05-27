@@ -52,10 +52,7 @@ public class ProfileEdit : MonoBehaviour, IForm
 
     public void OnAvatarChangePressed()
     {
-        Helpers.GetTexture((avatar) =>
-        {
-            SetAvatar(avatar);
-        });
+        Helpers.GetTexture(SetAvatar);
     }
 
     public void SetAvatar(Texture2D texture)
