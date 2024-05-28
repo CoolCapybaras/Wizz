@@ -2,9 +2,11 @@ using Net.Packets.Serverbound;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum InfoType
 {
@@ -32,6 +34,8 @@ public class OverlayManager : MonoBehaviour
         public GameObject createNewGameButton;
         public GameObject profileButton;
         public GameObject logoutButton;
+        public GameObject exitObj;
+        public GameObject unExitObj;
     }
 
     public Form form;
@@ -105,5 +109,28 @@ public class OverlayManager : MonoBehaviour
         GameManager.Instance.EnsureLeavedStartedGame();
 
         FormManager.Instance.ChangeForm("profileedit");
+    }
+
+    public void OnExitPressed()
+    {
+        form.exitObj.SetActive(true);
+        var sequence = DOTween.Sequence();
+        sequence.Insert(0, form.unExitObj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
+            .Insert(0, form.unExitObj.transform.DOScale(1, 0.25f).From(0))
+            .Play();
+
+        Debug.Log("Application Quit");
+    }
+
+    public void OnYesExitPressed()
+    {
+        GameManager.Instance.EnsureLeavedLobby();
+        GameManager.Instance.EnsureLeavedStartedGame();
+        Application.Quit();
+    }
+
+    public void OnExitNoPressed()
+    {
+        form.exitObj.SetActive(false);
     }
 }
