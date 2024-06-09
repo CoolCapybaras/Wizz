@@ -52,6 +52,7 @@ public class QuizEditor : MonoBehaviour, IForm
     }
 
     public Quiz quiz;
+    public bool needPublish;
     
     private Question AddQuestion(QuizQuestionType type, bool applyToQuiz = true)
     {
@@ -60,13 +61,13 @@ public class QuizEditor : MonoBehaviour, IForm
         questions.Add(new Question
         {
             obj = obj,
-            count = obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),
-            question = obj.transform.GetChild(1).GetComponent<TMP_InputField>(),
-            image = obj.transform.GetChild(5).GetComponent<RawImage>(),
-            time = obj.transform.GetChild(6).GetChild(0).GetComponent<TMP_InputField>()
+            count = obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>(),
+            question = obj.transform.GetChild(2).GetComponent<TMP_InputField>(),
+            image = obj.transform.GetChild(6).GetComponent<RawImage>(),
+            time = obj.transform.GetChild(7).GetChild(0).GetComponent<TMP_InputField>()
         });
         var i = questions.Count - 1;
-        questions[i].answers = InstantiateAnswers(obj.transform.GetChild(3), type, i);
+        questions[i].answers = InstantiateAnswers(obj.transform.GetChild(4), type, i);
         questions[i].obj.GetComponent<QuizEditorQuestionHelper>().AnswerIndex = i;
         questions[i].count.text = $"{i + 1}.";
         
@@ -261,6 +262,12 @@ public class QuizEditor : MonoBehaviour, IForm
         }
         
         LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = formedQuiz, Type = EditQuizType.Upload });
+    }
+
+    public void PublishQuiz()
+    {
+        needPublish = true;
+        SaveQuiz();
     }
 
     private bool CheckQuizCorrectness()

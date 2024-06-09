@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class ProfileEdit : MonoBehaviour, IForm
@@ -38,7 +39,7 @@ public class ProfileEdit : MonoBehaviour, IForm
     {
         if (!UpdateProfilePacket.NameRegex.IsMatch(form.nicknameInputField.text))
         {
-            OverlayManager.Instance.ShowInfo("Неверное имя", InfoType.Error);
+            OverlayManager.Instance.ShowInfo("Имя должно быть от 3 до 24 символов и содержать только буквы или цифры", InfoType.Error);
             return;
         }
 
@@ -52,6 +53,12 @@ public class ProfileEdit : MonoBehaviour, IForm
 
     public void OnAvatarChangePressed()
     {
+        if (!LocalClient.instance.Authorized)
+        {
+            OverlayManager.Instance.ShowInfo("Анонимно авторизованные игроки не могут менять аватарку", InfoType.Error);
+            return;    
+        }
+        
         Helpers.GetTexture(SetAvatar);
     }
 

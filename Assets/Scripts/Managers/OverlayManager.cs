@@ -58,7 +58,6 @@ public class OverlayManager : MonoBehaviour
     public void SetActiveBottomButtons(bool active)
     {
         form.profileButton.SetActive(active);
-        form.logoutButton.SetActive(active);
     }
 
     public void OnMainMenuPressed()
@@ -70,6 +69,12 @@ public class OverlayManager : MonoBehaviour
 
     public void OnLogoutPressed()
     {
+        if (FormManager.Instance.activeForm.Id == "login")
+        {
+            OnExitPressed();
+            return;
+        }
+        
         EnsureLeaved();
 
         LocalClient.instance.SendPacket(new LogoutPacket());
@@ -118,19 +123,5 @@ public class OverlayManager : MonoBehaviour
         sequence.Insert(0, form.unExitObj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
             .Insert(0, form.unExitObj.transform.DOScale(1, 0.25f).From(0))
             .Play();
-
-        Debug.Log("Application Quit");
-    }
-
-    public void OnYesExitPressed()
-    {
-        GameManager.Instance.EnsureLeavedLobby();
-        GameManager.Instance.EnsureLeavedStartedGame();
-        Application.Quit();
-    }
-
-    public void OnExitNoPressed()
-    {
-        form.exitObj.SetActive(false);
     }
 }

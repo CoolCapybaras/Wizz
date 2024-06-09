@@ -68,6 +68,9 @@ public class MyQuizzes : MonoBehaviour, IForm
         var count = form.quizzesLayout.childCount;
         for (int i = 0; i < count; ++i)
             Destroy(form.quizzesLayout.GetChild(i).gameObject);
+        
+        if (type == QuizzesType.My)
+            Instantiate(form.createQuizPrefab, form.quizzesLayout);
     }
 
     public void OnScrollValueChanged()
@@ -88,9 +91,6 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     private IEnumerator InstantiateQuizzesCoroutine()
     {
-        if (type == QuizzesType.My)
-            Instantiate(form.createQuizPrefab, form.quizzesLayout);
-        
         for (int i = quizOffset; i < quizzes.Count; ++i)
         {
             var quiz = quizzes[i];

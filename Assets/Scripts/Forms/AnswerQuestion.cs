@@ -60,6 +60,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        SetActiveAnswerButtons(true);
         form.resultObj.SetActive(false);
         var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
@@ -97,6 +98,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
     
     public void OnPlayerAnswer(int index)
     {
+        SetActiveAnswerButtons(false);
         answeredIndex = index;
         LocalClient.instance.SendPacket(new AnswerGamePacket() { AnswerId = index });
     }
@@ -150,6 +152,12 @@ public class AnswerQuestion : MonoBehaviour, IForm
             else
                 button.obj.GetComponent<Image>().color = form.wrongAnswerColor;
         }
+    }
+
+    public void SetActiveAnswerButtons(bool active)
+    {
+        for (int i = 0; i < form.answersLayout.childCount; ++i)
+            form.answersLayout.GetChild(i).GetComponent<Button>().interactable = active;
     }
     
     public void OnContinuePressed()
