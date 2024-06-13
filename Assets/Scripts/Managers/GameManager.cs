@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     public QuizQuestion[] questions;
     public int currentQuestionIndex;
-
+    
     public bool isInLobby;
     public bool isInStartedGame;
     public bool isHost;

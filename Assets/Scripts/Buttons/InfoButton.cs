@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InfoButton : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class InfoButton : MonoBehaviour
 
     private IEnumerator DissapearCoroutine()
     {
+        yield return new WaitForEndOfFrame();
+        GetComponent<HorizontalLayoutGroup>().spacing = 0.01f;
+        
         var sequence = DOTween.Sequence();
         sequence.Insert(0, GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
             .Play();

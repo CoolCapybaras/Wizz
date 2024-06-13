@@ -7,7 +7,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 public class MyQuizzes : MonoBehaviour, IForm
 {
@@ -25,14 +24,20 @@ public class MyQuizzes : MonoBehaviour, IForm
         public TMP_InputField searchInputField;
         public Transform quizzesLayout;
         public GameObject quizPrefab;
+        public GameObject createQuizPrefab;
+
+        public ScrollRect quizzesScroll;
     }
 
     public static MyQuizzes Instance;
     public Form form;
 
-    public List<Quiz> quizzes;
+    private List<Quiz> quizzes = new();
 
     private QuizzesType type;
+
+    private int quizOffset;
+    private bool quizzesListEnded;
     private void Awake()
     {
         Instance = this;
@@ -40,27 +45,54 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     public void OnSearchEndEdit(string str)
     {
-        LocalClient.instance.SendPacket(new SearchPacket() { QuizName = form.searchInputField.text });
+        quizOffset = 0;
+        quizzes.Clear();
+        quizzesListEnded = false;
+        RemoveQuizzesFromLayout();
+        SearchForQuizzes(form.searchInputField.text, 10, quizOffset);
     }
 
-    public void RemoveQuizzesFromLayout()
+    private void SearchForQuizzes(string quizName, int count, int offset)
+    {
+        if (SearchResultPacket.RequestQueue.Count != 0) return;
+        
+        LocalClient.instance.SendPacket(type == QuizzesType.Server
+            ? new SearchPacket { QuizName = quizName, Count = count, Offset = offset}
+            : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, IsAuthor = true });
+        SearchResultPacket.RequestQueue.Enqueue(1);
+    }
+    
+    private void RemoveQuizzesFromLayout()
     {
         var count = form.quizzesLayout.childCount;
         for (int i = 0; i < count; ++i)
             Destroy(form.quizzesLayout.GetChild(i).gameObject);
+        
+        if (type == QuizzesType.My)
+            Instantiate(form.createQuizPrefab, form.quizzesLayout);
     }
 
-    public void InstantiateQuizzes()
+    public void OnScrollValueChanged()
     {
-        RemoveQuizzesFromLayout();
+        if (form.quizzesScroll.verticalNormalizedPosition > 0.3f 
+            || SearchResultPacket.RequestQueue.Count != 0
+            || !form.quizzesScroll.verticalScrollbar.isActiveAndEnabled
+            || quizzesListEnded) return;
 
-        if (type == QuizzesType.My)
-            form.topText.text = "Мои викторины";
-        else if (type == QuizzesType.Server)
-            form.topText.text = "Поиск викторин";
+        quizOffset += 10;
+        SearchForQuizzes(form.searchInputField.text, 10, quizOffset);
+    }
 
-        foreach(var quiz in quizzes)
+    private void InstantiateQuizzes()
+    {
+        StartCoroutine(InstantiateQuizzesCoroutine());
+    }
+
+    private IEnumerator InstantiateQuizzesCoroutine()
+    {
+        for (int i = quizOffset; i < quizzes.Count; ++i)
         {
+            var quiz = quizzes[i];
             var obj = Instantiate(form.quizPrefab, form.quizzesLayout);
 
             obj.GetComponent<QuizButton>().quizId = quiz.Id;
@@ -74,14 +106,38 @@ public class MyQuizzes : MonoBehaviour, IForm
             {
                 obj.transform.GetChild(3).gameObject.SetActive(false);
                 obj.transform.GetChild(4).gameObject.SetActive(false);
+                obj.transform.GetChild(5).gameObject.SetActive(false);
             }
+            else
+            {
+                if (quiz.ModerationStatus is not (ModerationStatus.ModerationRejected
+                    or ModerationStatus.NotModerated))
+                {
+                    obj.transform.GetChild(5).gameObject.SetActive(false);
+                    continue;
+                }
+                obj.transform.GetChild(5).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
+                    quiz.ModerationStatus == ModerationStatus.NotModerated ? "Не опубликована" : "Не прошла модерацию";
+            }
+
+            yield return null;
         }
     }
-
+    
     public void InitializeForm()
     {
-        RemoveQuizzesFromLayout();
+        if (type == QuizzesType.My)
+        {
+            form.topText.text = "Мои викторины";
+        }
+        else if (type == QuizzesType.Server)
+            form.topText.text = "Поиск викторин";
+        
+        quizzes.Clear();
+        quizzesListEnded = false;
+        quizOffset = 0;
         OnSearchEndEdit(string.Empty);
+        RemoveQuizzesFromLayout();
     }
 
     public void SetQuizzesList(int type)
@@ -91,7 +147,10 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     public void OnSearchResult(SearchResultPacket packet)
     {
-        quizzes = packet.Quizzes.ToList();
+        quizzes.AddRange(packet.Quizzes.ToList());
+        if (packet.Quizzes.Length < 10)
+            quizzesListEnded = true;
+        
         InstantiateQuizzes();
     }
 }

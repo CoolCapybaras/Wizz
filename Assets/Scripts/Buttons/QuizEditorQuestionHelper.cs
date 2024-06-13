@@ -31,17 +31,7 @@ public class QuizEditorQuestionHelper : MonoBehaviour
     {
         QuizEditor.Instance.OnQuestionValueChanged(AnswerIndex);
     }
-
-    public void OnAnswerValueChanged(int index)
-    {
-        QuizEditor.Instance.OnAnswerValueChanged(index, AnswerIndex);
-    }
     
-    public void OnTogglePressed(int index)
-    {
-        QuizEditor.Instance.OnTogglePressed(index, AnswerIndex);
-    }
-
     public void OnTimeValueChanged()
     {
         QuizEditor.Instance.OnTimeValueChanged(AnswerIndex);

@@ -30,7 +30,7 @@ public static class Helpers
             if (path != null)
             {
                 // Create Texture from selected image
-                Texture2D texture = NativeGallery.LoadImageAtPath(path);
+                Texture2D texture = NativeGallery.LoadImageAtPath(path, -1, false);
                 if (texture == null)
                 {
                     Debug.Log("Couldn't load texture from " + path);

@@ -1,5 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using WizzServer.Models;
+
+
+public enum ModerationStatus
+{
+	NotModerated,
+	InModeration,
+	ModerationAccepted,
+	ModerationRejected
+}
 
 public class Quiz
 {
@@ -9,24 +19,20 @@ public class Quiz
 	public string Description { get; set; }
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
+	public ModerationStatus ModerationStatus { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
 	
 	public List<string> Hashtags { get; set; }
 
 	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
 	{
-		if (Id == 0)
-		{
-			stream.WriteByte(0);
-			return;
-		}
-
 		stream.WriteVarInt(Id);
 		stream.WriteString(Name);
 		stream.WriteImage(Image);
 		stream.WriteString(Description);
 		stream.WriteVarInt(QuestionCount);
 		stream.WriteVarInt(AuthorId);
+		stream.WriteVarInt(ModerationStatus);
 
 		if (ignoreQuestions)
 		{
@@ -40,25 +46,39 @@ public class Quiz
 		}
 	}
 
+
+
 	public static Quiz Deserialize(WizzStream stream)
 	{
-		int quizId = stream.ReadVarInt();
-		if (quizId == 0)
-			return null!;
-
 		var quiz = new Quiz();
-		quiz.Id = quizId;
+		quiz.Id = stream.ReadVarInt();
 		quiz.Name = stream.ReadString();
 		quiz.Image = stream.ReadImage();
 		quiz.Description = stream.ReadString();
 		quiz.QuestionCount = stream.ReadVarInt();
 		quiz.AuthorId = stream.ReadVarInt();
+		quiz.ModerationStatus = (ModerationStatus)stream.ReadVarInt();
 
 		int count = stream.ReadVarInt();
 		quiz.Questions = new List<QuizQuestion>();
 		for (int i = 0; i < count; i++)
 			quiz.Questions.Add(QuizQuestion.Deserialize(stream));
 
+		return quiz;
+	}
+
+	public Quiz Clone()
+	{
+		Quiz quiz = new();
+		quiz.Id = Id;
+		quiz.Name = Name;
+		quiz.Description = Description;
+		quiz.Image = new ByteImage(Image.data);
+		quiz.Hashtags = Hashtags.ToList();
+		quiz.Questions = new();
+		foreach (var question in Questions)
+			quiz.Questions.Add(question.Clone());
+		
 		return quiz;
 	}
 }

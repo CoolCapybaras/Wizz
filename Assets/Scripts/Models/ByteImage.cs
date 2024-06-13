@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ByteImage
@@ -14,9 +15,9 @@ public class ByteImage
 	{
 		if (texture != null)
 			return texture;
-
+		
 		texture = new Texture2D(2, 2);
-		texture.LoadImage(data);
+		texture.LoadImage(data); 
 		return texture;
 	}
 }

@@ -72,6 +72,21 @@ public partial class WizzStream : Stream
 		}//TODO better handling of this
 	}
 
+	public async ValueTask<int> ReadAtLeastAsyncCore(Memory<byte> buffer, CancellationToken cancellationToken = default)
+	{
+		int totalRead = 0;
+		while (totalRead < buffer.Length)
+		{
+			int read = await BaseStream.ReadAsync(buffer.Slice(totalRead), cancellationToken).ConfigureAwait(false);
+			if (read == 0)
+				throw new EndOfStreamException();
+
+			totalRead += read;
+		}
+
+		return totalRead;
+	}
+	
 	public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 	{
 		await BaseStream.WriteAsync(buffer.AsMemory(offset, count), cancellationToken);

@@ -87,6 +87,7 @@ public class SoundManager : MonoBehaviour
 	private float countdownStepTimer;
 
 	private float maxVolume;
+	private float localVolume = 1f;
 	private float filterFadeDuration;
 
 	public void Awake()
@@ -107,9 +108,6 @@ public class SoundManager : MonoBehaviour
 
 	public void Update()
 	{
-		if (!enabled)
-			return;
-
 		switch (fadeState)
 		{
 			case FadeState.FadingIn:
@@ -119,7 +117,7 @@ public class SoundManager : MonoBehaviour
 					musicAudioSource.clip = fadingInClip;
 					musicAudioSource.Play();
 				}
-				musicAudioSource.volume = Mathf.Lerp(0, maxVolume, fadingTimer / fadeInDuration);
+				musicAudioSource.volume = Mathf.Lerp(0, maxVolume * localVolume, fadingTimer / fadeInDuration);
 				fadingTimer += Time.deltaTime;
 				if (musicAudioSource.volume >= maxVolume)
 				{
@@ -130,7 +128,7 @@ public class SoundManager : MonoBehaviour
 				break;
 
 			case FadeState.FadingOut:
-				musicAudioSource.volume = Mathf.Lerp(maxVolume, 0, fadingTimer / fadeOutDuration);
+				musicAudioSource.volume = Mathf.Lerp(maxVolume * localVolume, 0, fadingTimer / fadeOutDuration);
 				fadingTimer += Time.deltaTime;
 				if (musicAudioSource.volume <= 0)
 				{
@@ -144,6 +142,9 @@ public class SoundManager : MonoBehaviour
 						return;
 					}
 				}
+				break;
+			default:
+				musicAudioSource.volume = maxVolume * localVolume;
 				break;
 		}
 
@@ -178,7 +179,7 @@ public class SoundManager : MonoBehaviour
 
 			if (countdownStepTimer <= 0 && countdownStarted)
 			{
-				countdownAudioSource.PlayOneShot(countdownClip, 0.7f);
+				countdownAudioSource.PlayOneShot(countdownClip, 0.7f * localVolume);
 				countdownAudioSource.pitch += calculatedPitchStep;
 				countdownStepTimer = 1;
 			}
@@ -193,16 +194,14 @@ public class SoundManager : MonoBehaviour
 		}
 	}
 
-	public void SetSound(bool enabled)
+	public void SetSound(float volume)
 	{
-		shortClipsAudioSource.mute = enabled;
-		musicAudioSource.mute = enabled;
-		countdownAudioSource.mute = enabled;
+		localVolume = volume;
 	}
 
 	public void PlayShortClip(string id)
 	{
-		shortClipsAudioSource.PlayOneShot(GetShortClip(id), 0.7f);
+		shortClipsAudioSource.PlayOneShot(GetShortClip(id), 0.7f * localVolume);
 	}
 	
 	public void PlayMusic(string id, bool loopOrder = false)
