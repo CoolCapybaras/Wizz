@@ -69,12 +69,6 @@ public class OverlayManager : MonoBehaviour
 
     public void OnLogoutPressed()
     {
-        if (FormManager.Instance.activeForm.Id == "login")
-        {
-            OnExitPressed();
-            return;
-        }
-        
         EnsureLeaved();
 
         LocalClient.instance.SendPacket(new LogoutPacket());

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -64,12 +65,12 @@ public class MainMenu : MonoBehaviour, IForm
     private void SearchForQuizzes(bool isAuthor = true, int count = 3)
     {
         LocalClient.instance.SendPacket(new SearchPacket {IsAuthor = isAuthor, Count = count});
+        SearchResultPacket.RequestQueue.Enqueue(0);
     }
 
     public void OnSearchResult(SearchResultPacket packet)
     {
         quizzes.AddRange(packet.Quizzes);
-        
         InstantiateQuizzes();
     }
     

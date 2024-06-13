@@ -37,7 +37,6 @@ public class MyQuizzes : MonoBehaviour, IForm
     private QuizzesType type;
 
     private int quizOffset;
-    private bool waitForSearchResult;
     private bool quizzesListEnded;
     private void Awake()
     {
@@ -55,12 +54,12 @@ public class MyQuizzes : MonoBehaviour, IForm
 
     private void SearchForQuizzes(string quizName, int count, int offset)
     {
-        if (waitForSearchResult) return;
+        if (SearchResultPacket.RequestQueue.Count != 0) return;
         
-        waitForSearchResult = true;
         LocalClient.instance.SendPacket(type == QuizzesType.Server
             ? new SearchPacket { QuizName = quizName, Count = count, Offset = offset}
             : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, IsAuthor = true });
+        SearchResultPacket.RequestQueue.Enqueue(1);
     }
     
     private void RemoveQuizzesFromLayout()
@@ -76,8 +75,8 @@ public class MyQuizzes : MonoBehaviour, IForm
     public void OnScrollValueChanged()
     {
         if (form.quizzesScroll.verticalNormalizedPosition > 0.3f 
+            || SearchResultPacket.RequestQueue.Count != 0
             || !form.quizzesScroll.verticalScrollbar.isActiveAndEnabled
-            || waitForSearchResult 
             || quizzesListEnded) return;
 
         quizOffset += 10;
@@ -153,6 +152,5 @@ public class MyQuizzes : MonoBehaviour, IForm
             quizzesListEnded = true;
         
         InstantiateQuizzes();
-        waitForSearchResult = false;
     }
 }

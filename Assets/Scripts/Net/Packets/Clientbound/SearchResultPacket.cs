@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Net.Packets.Clientbound
@@ -9,6 +10,8 @@ namespace Net.Packets.Clientbound
 
 		public Quiz[] Quizzes { get; set; }
 
+		public static Queue<int> RequestQueue = new(); 
+		
 		public SearchResultPacket()
 		{
 
@@ -58,10 +61,15 @@ namespace Net.Packets.Clientbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			if (FormManager.Instance.activeForm.Id == "myquizzes")
+			var type = RequestQueue.Dequeue();
+
+			if (type == 0)
+			{
+				if (FormManager.Instance.activeForm.Id == "mainmenu")
+					MainMenu.Instance.OnSearchResult(this);
+			}
+			else if (FormManager.Instance.activeForm.Id == "myquizzes")
 				MyQuizzes.Instance.OnSearchResult(this);
-			else if (FormManager.Instance.activeForm.Id == "mainmenu")
-				MainMenu.Instance.OnSearchResult(this);
 			
 			return IPacket.CompletedTask;
 		}
