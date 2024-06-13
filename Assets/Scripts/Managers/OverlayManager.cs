@@ -102,6 +102,20 @@ public class OverlayManager : MonoBehaviour
         GameManager.Instance.EnsureLeavedStartedGame();
     }
 
+    public void ChangeFullscreen()
+    {
+        var mode = Screen.fullScreenMode == FullScreenMode.FullScreenWindow
+            ? FullScreenMode.Windowed
+            : FullScreenMode.FullScreenWindow;
+        
+        Screen.SetResolution(mode == FullScreenMode.FullScreenWindow
+                ? Display.main.systemWidth
+                : Display.main.systemWidth / 2,
+            mode == FullScreenMode.FullScreenWindow 
+                ? Display.main.systemHeight 
+                : Display.main.systemHeight / 2, mode);
+    }
+
     public void OnProfileEditPressed()
     {
         GameManager.Instance.EnsureLeavedLobby();

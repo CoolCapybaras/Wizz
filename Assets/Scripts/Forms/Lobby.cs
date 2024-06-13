@@ -80,6 +80,7 @@ public class Lobby : MonoBehaviour, IForm
             form.startGameButton.SetActive(false);
             return;
         }
+        form.startGameButton.SetActive(true);
         gameManager.isHost = true;
     }
 
