@@ -21,6 +21,7 @@ public class QuizLoading : MonoBehaviour, IForm
     public struct Form
     {
         public TextMeshProUGUI quizNameText;
+        public TextMeshProUGUI loadingText;
         public TextMeshProUGUI timerText;
         public GameObject countdownObj;
     }
@@ -43,6 +44,9 @@ public class QuizLoading : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        form.quizNameText.gameObject.SetActive(true);
+        form.loadingText.gameObject.SetActive(true);
+        
         GameManager.Instance.currentQuestionIndex = 0;
         form.quizNameText.text = GameManager.Instance.currentQuiz.Name;
         form.timerText.gameObject.SetActive(false);
@@ -61,6 +65,9 @@ public class QuizLoading : MonoBehaviour, IForm
 
     public void AnimateCountdown()
     {
+        form.quizNameText.gameObject.SetActive(false);
+        form.loadingText.gameObject.SetActive(false);
+        
         form.timerText.gameObject.SetActive(true);
         form.countdownObj.gameObject.SetActive(true);
         var countdownImage = form.countdownObj.GetComponent<Image>();

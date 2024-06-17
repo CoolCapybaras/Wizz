@@ -1510,7 +1510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4289453873819897662, guid: 400ce5f6ff65b7249a629cf99d4170c5, type: 3}
       propertyPath: m_CharacterLimit
-      value: 99
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 4289453873819897662, guid: 400ce5f6ff65b7249a629cf99d4170c5, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size

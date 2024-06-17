@@ -121,6 +121,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
         if (!gameManager.isHost)
             form.continueButton.SetActive(false);
+        else
+            form.continueButton.SetActive(true);
 
 
         if (answeredIndex == answerId)

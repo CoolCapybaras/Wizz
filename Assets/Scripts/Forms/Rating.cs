@@ -66,6 +66,8 @@ public class Rating : MonoBehaviour, IForm
     {
         if (!gameManager.isHost)
             form.NextButton.SetActive(false);
+        else
+            form.NextButton.SetActive(true);
         InstantiatePlayers();
     }
 }

@@ -75,7 +75,7 @@ public class Login : MonoBehaviour, IForm
         LocalClient.instance.Id = id;
         LocalClient.instance.Image = image;
         
-        if (PlayerPrefs.HasKey("token"))
+        if (id != 0)
             LocalClient.instance.Authorized = true;
         
         FormManager.Instance.ChangeForm("mainmenu");
