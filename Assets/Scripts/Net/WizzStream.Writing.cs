@@ -166,16 +166,13 @@ public partial class WizzStream
 
 	public void WriteImage(ByteImage image)
 	{
-        if (image is null)
-        {
-            WriteVarInt(0);
-            return;
-        }
+		if (image is null)
+		{
+			WriteByte(0);
+			return;
+		}
 
-        using var stream = new MemoryStream(image.data);
-        WriteVarInt((int)stream.Length);
-
-        stream.Position = 0;
-        stream.CopyTo(BaseStream);
-    }
+		WriteVarInt(image.data.Length);
+		BaseStream.Write(image.data);
+	}
 }

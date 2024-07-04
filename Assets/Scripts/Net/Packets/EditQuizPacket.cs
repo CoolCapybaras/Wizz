@@ -36,16 +36,20 @@ namespace Net.Packets
 		public void Populate(WizzStream stream)
 		{
 			Type = (EditQuizType)stream.ReadVarInt();
-			QuizId = stream.ReadVarInt();
-			Quiz = Quiz.Deserialize(stream);
+			if (Type == EditQuizType.Get)
+				Quiz = Quiz.Deserialize(stream);
+			else
+				QuizId = stream.ReadVarInt();
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
 			packetStream.WriteVarInt(Type);
-			packetStream.WriteVarInt(QuizId);
-			Quiz.Serialize(packetStream, false);
+			if (Type == EditQuizType.Upload)
+				Quiz.Serialize(packetStream, false);
+			else
+				packetStream.WriteVarInt(QuizId);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);
