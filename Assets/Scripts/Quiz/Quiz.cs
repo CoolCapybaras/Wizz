@@ -24,7 +24,7 @@ public class Quiz
 
 	public List<string> Hashtags { get; set; }
 
-	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
+	public void Serialize(WizzStream stream, bool includeQuestions = false)
 	{
 		stream.WriteVarInt(Id);
 		stream.WriteString(Name);
@@ -36,15 +36,15 @@ public class Quiz
 		stream.WriteVarInt(Color);
 		stream.WriteVarInt((int)(Score * 10));
 
-		if (ignoreQuestions)
-		{
-			stream.WriteByte(0);
-		}
-		else
+		if (includeQuestions)
 		{
 			stream.WriteVarInt(Questions.Count);
 			for (int i = 0; i < Questions.Count; i++)
-				Questions[i].Serialize(stream);
+				Questions[i].Serialize(stream, true);
+		}
+		else
+		{
+			stream.WriteByte(0);
 		}
 	}
 
