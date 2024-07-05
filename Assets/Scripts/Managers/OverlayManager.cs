@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.Scripts.Misc;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,11 @@ public enum InfoType
 public class OverlayManager : MonoBehaviour
 {
     public static OverlayManager Instance;
-
+    
     private void Awake()
     {
         Instance = this;
+        gameManager = GameManager.Instance;
     }
 
     [Serializable]
@@ -29,6 +31,8 @@ public class OverlayManager : MonoBehaviour
         public Transform infoLayout;
         public GameObject infoPrefab;
         public Sprite[] infoSprites;
+
+        public RawImage backgroundColor;
 
         public GameObject toMainMenuButton;
         public GameObject createNewGameButton;
@@ -39,7 +43,8 @@ public class OverlayManager : MonoBehaviour
     }
 
     public Form form;
-
+    private GameManager gameManager;
+    
     public void ShowInfo(string text, InfoType type)
     {
         var obj = Instantiate(form.infoPrefab, form.infoLayout);
@@ -100,6 +105,7 @@ public class OverlayManager : MonoBehaviour
     {
         GameManager.Instance.EnsureLeavedLobby();
         GameManager.Instance.EnsureLeavedStartedGame();
+        ChangeBackgroundColor();
     }
 
     public void ChangeFullscreen()
@@ -131,5 +137,18 @@ public class OverlayManager : MonoBehaviour
         sequence.Insert(0, form.unExitObj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
             .Insert(0, form.unExitObj.transform.DOScale(1, 0.25f).From(0))
             .Play();
+    }
+    
+    public void ChangeBackgroundColor()
+    {
+        if (gameManager.isInStartedGame || gameManager.isInLobby)
+        {
+            var color = Colors.GetColorFromInt((int)GameManager.Instance.currentQuiz.Color);
+            form.backgroundColor.color = color;
+        }
+        else
+        {
+            form.backgroundColor.color = Colors.GetColorFromInt((int)HexColor.Default);
+        }
     }
 }

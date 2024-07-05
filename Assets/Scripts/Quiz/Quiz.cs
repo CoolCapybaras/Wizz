@@ -10,6 +10,13 @@ public enum ModerationStatus
 	ModerationRejected
 }
 
+public enum HexColor
+{
+	Default = 2106434,
+	Red = 4003861,
+	Green = 2044701
+}
+
 public class Quiz
 {
 	public int Id { get; set; }
@@ -19,7 +26,7 @@ public class Quiz
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
 	public ModerationStatus ModerationStatus { get; set; }
-	public int Color { get; set; }
+	public HexColor Color { get; set; }
 	public float Score { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
 
@@ -61,7 +68,7 @@ public class Quiz
 		quiz.QuestionCount = stream.ReadVarInt();
 		quiz.AuthorId = stream.ReadVarInt();
 		quiz.ModerationStatus = (ModerationStatus)stream.ReadVarInt();
-		quiz.Color = stream.ReadVarInt();
+		quiz.Color = (HexColor)stream.ReadVarInt();
 		quiz.Score = stream.ReadVarInt() / 10f;
 
 		int count = stream.ReadVarInt();

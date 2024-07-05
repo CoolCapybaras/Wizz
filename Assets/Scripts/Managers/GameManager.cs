@@ -28,14 +28,15 @@ public class GameManager : MonoBehaviour
 
     public void EnsureLeavedLobby()
     {
-        if (isInLobby)
-            LocalClient.instance.SendPacket(new LeaveLobbyPacket());
+        if (!isInLobby) return;
+        
+        LocalClient.instance.SendPacket(new LeaveLobbyPacket());
+        isInLobby = false;
     }
 
     public void EnsureLeavedStartedGame()
     {
-        if (!isInStartedGame)
-            return;
+        if (!isInStartedGame) return;
 
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.ForceCountdownStop();

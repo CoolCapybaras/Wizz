@@ -40,7 +40,7 @@ namespace Net.Packets.Serverbound
 
 		public ValueTask HandleAsync(LocalClient client)
 		{
-			throw new NotImplementedException();
+			return IPacket.CompletedTask;
 		}
 	}
 }
