@@ -100,14 +100,18 @@ public class AnswerQuestion : MonoBehaviour, IForm
     {
         SetActiveAnswerButtons(false);
         answeredIndex = index;
-        LocalClient.instance.SendPacket(new AnswerGamePacket() { AnswerId = index });
+        var answer = new QuizAnswer();
+        // TODO: поддерживать разные типы вопросов
+        answer.Id = answeredIndex;
+        LocalClient.instance.SendPacket(new AnswerGamePacket() { Answer = answer});
     }
 
     public void OnRightAnswer(RightAnswerPacket packet)
     {
-        PrepareResultUI(packet.AnswerId, packet.RoundScore);
+        // TODO: поддерживать разные типы вопросов
+        PrepareResultUI(packet.Answer.Id, packet.RoundScore);
         timerStarted = false;
-        HighlightButton(packet.AnswerId);
+        HighlightButton(packet.Answer.Id);
         SoundManager.Instance.SetLowPassFilter(true, 1);
     }
 

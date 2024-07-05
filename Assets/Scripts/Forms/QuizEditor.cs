@@ -78,8 +78,9 @@ public class QuizEditor : MonoBehaviour, IForm
         if (applyToQuiz)
         {
             quiz.Questions.Add(new QuizQuestion());
+            quiz.Questions[i].RightAnswer = new();
             quiz.Questions[i].Answers = new List<string>();
-            quiz.Questions[i].AnswerIndex = -1;
+            quiz.Questions[i].RightAnswer.Id = -1;
             quiz.Questions[i].Type = type;
             
             for (int m = 0; m < questions[i].answers.Count; m++)
@@ -202,9 +203,9 @@ public class QuizEditor : MonoBehaviour, IForm
 
         if (!questions[answerIndex].answers[index].GetComponent<Toggle>().isOn)
         {
-            quiz.Questions[answerIndex].AnswerIndex = -1;
+            quiz.Questions[answerIndex].RightAnswer.Id = -1;
         }
-        quiz.Questions[answerIndex].AnswerIndex = index;
+        quiz.Questions[answerIndex].RightAnswer.Id = index;
     }
     
     public void OnTimeValueChanged(int answerIndex)
@@ -257,15 +258,8 @@ public class QuizEditor : MonoBehaviour, IForm
     {
         if(!CheckQuizCorrectness())
             return;
-        var formedQuiz = quiz.Clone();
-        foreach (var question in formedQuiz.Questions)
-        {
-            var temp = (string)question.Answers[question.AnswerIndex].Clone();
-            question.Answers.RemoveAt(question.AnswerIndex);
-            question.Answers.Insert(0, temp);
-        }
         
-        LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = formedQuiz, Type = EditQuizType.Upload });
+        LocalClient.instance.SendPacket(new EditQuizPacket { Quiz = quiz, Type = EditQuizType.Upload });
     }
 
     public void PublishQuiz()
@@ -322,7 +316,7 @@ public class QuizEditor : MonoBehaviour, IForm
                 OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указано время ответа", InfoType.Error);
             }
 
-            if (question.AnswerIndex == -1)
+            if (question.RightAnswer.Id == -1)
             {
                 flag = false;
                 OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
@@ -387,8 +381,8 @@ public class QuizEditor : MonoBehaviour, IForm
             {
                 question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text =
                     t.Answers[j];
-                
-                if (j == 0)
+                // TODO: поддержка разных типов вопросов
+                if (j == t.RightAnswer.Id)
                     question.answers[j].GetComponent<Toggle>().isOn = true;
             }
         }
@@ -414,7 +408,7 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void BackgroundColorChange()
     {
-        quiz.BackgroundColor = form.backgroundColor;
+       // quiz.Color = form.backgroundColor;
     }
     
     public void InitializeForm()
