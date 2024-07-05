@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using WizzServer.Models;
 
 
@@ -21,6 +22,8 @@ public class Quiz
 	public int AuthorId { get; set; }
 	public ModerationStatus ModerationStatus { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
+	
+	public Color BackgroundColor { get; set; }
 	
 	public List<string> Hashtags { get; set; }
 

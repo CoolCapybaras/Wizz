@@ -120,4 +120,9 @@ public class Lobby : MonoBehaviour, IForm
         gameManager.questions = packet.QuizQuestions;
         gameManager.isInStartedGame = true;
     }
+
+    public void ChangeBackgroundColor()
+    {
+        
+    }
 }
