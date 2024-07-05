@@ -64,7 +64,7 @@ public class MainMenu : MonoBehaviour, IForm
     
     private void SearchForQuizzes(bool isAuthor = true, int count = 3)
     {
-        LocalClient.instance.SendPacket(new SearchPacket {IsAuthor = isAuthor, Count = count});
+        LocalClient.instance.SendPacket(new SearchPacket {SearchType = SearchType.Author, Count = count});
         SearchResultPacket.RequestQueue.Enqueue(0);
     }
 

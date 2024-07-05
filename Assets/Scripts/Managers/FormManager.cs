@@ -114,7 +114,7 @@ public class FormManager : MonoBehaviour
         {
             if (activeForm.Id == QuizForms[i])
             {
-                backgroundColor.color = quiz.BackgroundColor;
+               // backgroundColor.color = quiz.Color;
                 break;
             }
             else

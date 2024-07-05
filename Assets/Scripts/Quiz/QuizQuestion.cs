@@ -62,16 +62,4 @@ public class QuizQuestion
 		question.RightAnswer = RightAnswer;
 		return question;
 	}
-
-	public QuizQuestion Clone()
-	{
-		var question = new QuizQuestion();
-		question.Type = Type;
-		question.Question = Question;
-		question.Answers = Answers.ToList();
-		question.Image = new ByteImage(Image.data);
-		question.Time = Time;
-		question.AnswerIndex = AnswerIndex;
-		return question;
-	}
 }

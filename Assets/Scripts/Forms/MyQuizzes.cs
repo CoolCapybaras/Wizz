@@ -58,7 +58,7 @@ public class MyQuizzes : MonoBehaviour, IForm
         
         LocalClient.instance.SendPacket(type == QuizzesType.Server
             ? new SearchPacket { QuizName = quizName, Count = count, Offset = offset}
-            : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, IsAuthor = true });
+            : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, SearchType = SearchType.Author });
         SearchResultPacket.RequestQueue.Enqueue(1);
     }
     
