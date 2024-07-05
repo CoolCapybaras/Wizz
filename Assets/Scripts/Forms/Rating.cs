@@ -44,10 +44,10 @@ public class Rating : MonoBehaviour, IForm
             var player = gameManager.GetClientById(scores[i].Key);
             var obj = form.PlayerPrefabs[i];
             obj.SetActive(true);
-            obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"{i + 1}";
-            obj.transform.GetChild(1).GetComponent<RawImage>().texture = player.Image.GetTexture();
-            obj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = player.Name;
-            obj.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
+            obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{i + 1}";
+            obj.transform.GetChild(2).GetComponent<RawImage>().texture = player.Image.GetTexture();
+            obj.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = player.Name;
+            obj.transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
         }
     }
 
@@ -64,6 +64,10 @@ public class Rating : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        if (!gameManager.isHost)
+            form.NextButton.SetActive(false);
+        else
+            form.NextButton.SetActive(true);
         InstantiatePlayers();
     }
 }

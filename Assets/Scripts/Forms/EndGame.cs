@@ -73,13 +73,15 @@ public class EndGame : MonoBehaviour, IForm
             var pedestal = form.pedestals[i];
             var client = gameManager.GetClientById(scores[i].Key);
             pedestal.SetActive(true);
-            pedestal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = client.Name;
-            pedestal.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
-            pedestal.transform.GetChild(1).GetComponent<RawImage>().texture = client.Image.GetTexture();
+            pedestal.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = client.Name;
+            pedestal.transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{scores[i].Value} баллов";
+            pedestal.transform.GetChild(0).GetChild(1).GetComponent<RawImage>().texture = client.Image.GetTexture();
 
             var transform = pedestal.GetComponent<RectTransform>();
             var sequence = DOTween.Sequence();
-            sequence.Insert(0.5f * i, pedestal.GetComponent<RectTransform>().DOSizeDelta(transform.sizeDelta, 1).From(new Vector2(transform.sizeDelta.x, 0)))
+            sequence.Insert(0.5f * i, pedestal.GetComponent<RectTransform>()
+                    .DOSizeDelta(transform.sizeDelta, 1)
+                    .From(new Vector2(transform.sizeDelta.x, 0)))
                 .Play();
         }
 
@@ -89,9 +91,8 @@ public class EndGame : MonoBehaviour, IForm
             RemoveScoresFromScroll();
 
         foreach(var particle in form.particles)
-        {
             particle.Play();
-        }
+        
         SoundManager.Instance.PlayShortClip("endgame");
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.SetLowPassFilter(false, 1);

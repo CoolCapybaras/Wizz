@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+
 public enum ModerationStatus
 {
 	NotModerated,
@@ -48,6 +49,8 @@ public class Quiz
 		}
 	}
 
+
+
 	public static Quiz Deserialize(WizzStream stream)
 	{
 		var quiz = new Quiz();
@@ -80,7 +83,6 @@ public class Quiz
 		quiz.Questions = new();
 		foreach (var question in Questions)
 			quiz.Questions.Add(question.Clone());
-
 		return quiz;
 	}
 }

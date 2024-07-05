@@ -36,6 +36,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
         public TextMeshProUGUI resultText;
         public TextMeshProUGUI scoreText;
         public GameObject continueButton;
+        public Transform answersLayout;
+        public GameObject answerPrefab;
     }
 
     public Form form;
@@ -58,18 +60,16 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void InitializeForm()
     {
+        SetActiveAnswerButtons(true);
         form.resultObj.SetActive(false);
         var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
-        
-        for (int i = 0; i < form.answerButtons.Length; i++)
+        DestroyLayoutChildren(form.answersLayout);
+        for (int i = 0; i < question.Answers.Count; ++i)
         {
-            var button = form.answerButtons[i];
-            button.obj.GetComponent<Image>().color = button.defaultColor;
-            button.obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = question.Answers[i];
-            button.obj.GetComponent<AnswerButtonHelper>().index = i;
-            button.obj.GetComponent<Button>().interactable = true;
+            var answer = question.Answers[i];
+            form.answerButtons[i].obj = InstantiateAnswerButton(form.answerButtons[i].defaultColor, answer, i);
         }
 
         time = 0;
@@ -79,8 +79,26 @@ public class AnswerQuestion : MonoBehaviour, IForm
         SoundManager.Instance.PlayMusic("ingame");
     }
 
+    private GameObject InstantiateAnswerButton(Color32 color, string text, int index)
+    {
+        var obj = Instantiate(form.answerPrefab, form.answersLayout);
+        obj.GetComponent<Image>().color = color;
+        obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = text;
+        obj.GetComponent<AnswerButtonHelper>().index = index;
+        obj.GetComponent<Button>().interactable = true;
+        
+        return obj;
+    }
+
+    private void DestroyLayoutChildren(Transform layout)
+    {
+        for (int i = 0; i < layout.childCount; ++i)
+            Destroy(layout.GetChild(i).gameObject);
+    }
+    
     public void OnPlayerAnswer(int index)
     {
+        SetActiveAnswerButtons(false);
         answeredIndex = index;
         LocalClient.instance.SendPacket(new AnswerGamePacket() { AnswerId = index });
     }
@@ -103,6 +121,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
         if (!gameManager.isHost)
             form.continueButton.SetActive(false);
+        else
+            form.continueButton.SetActive(true);
 
 
         if (answeredIndex == answerId)
@@ -124,7 +144,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void HighlightButton(int index)
     {
-        for (int i = 0; i < form.answerButtons.Length; ++i)
+        for (int i = 0; i < form.answersLayout.childCount; ++i)
         {
             var button = form.answerButtons[i];
             button.obj.GetComponent<Button>().interactable = false;
@@ -134,6 +154,12 @@ public class AnswerQuestion : MonoBehaviour, IForm
             else
                 button.obj.GetComponent<Image>().color = form.wrongAnswerColor;
         }
+    }
+
+    public void SetActiveAnswerButtons(bool active)
+    {
+        for (int i = 0; i < form.answersLayout.childCount; ++i)
+            form.answersLayout.GetChild(i).GetComponent<Button>().interactable = active;
     }
     
     public void OnContinuePressed()

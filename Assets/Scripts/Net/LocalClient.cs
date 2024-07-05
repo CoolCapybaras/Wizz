@@ -128,7 +128,7 @@ public class LocalClient : MonoBehaviour
 		var length = await wizzStream.ReadVarIntAsync();
 		var receivedData = new byte[length];
 
-		_ = await wizzStream.ReadAsync(receivedData.AsMemory(0, length));
+		_ = await wizzStream.ReadAtLeastAsyncCore(receivedData.AsMemory(0, length));
 
 		var packetId = 0;
 		var packetData = Array.Empty<byte>();

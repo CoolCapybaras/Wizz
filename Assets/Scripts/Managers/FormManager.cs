@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FormManager : MonoBehaviour
 {
@@ -12,7 +13,13 @@ public class FormManager : MonoBehaviour
         Out
     }
 
+    public List<string> QuizForms = new();
+
     public static FormManager Instance;
+    
+    public Quiz quiz;
+
+    public RawImage backgroundColor;
 
     private void Awake()
     {
@@ -28,7 +35,7 @@ public class FormManager : MonoBehaviour
     }
 
     public List<Form> forms;
-    private Form activeForm;
+    public Form activeForm;
 
     public void ChangeForm(string id, AnimType animType = AnimType.In)
     {
@@ -61,7 +68,7 @@ public class FormManager : MonoBehaviour
             {
                 SetActiveForm(id);
             })
-            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(0.5f))
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(0.8f))
             .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
         return inSequence;
     }
@@ -78,7 +85,7 @@ public class FormManager : MonoBehaviour
             {
                 SetActiveForm(id);
             })
-            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(3f))
+            .Insert(0, GetFormById(id).Obj.transform.DOScale(1, 0.25f).From(1.25f))
             .Insert(0, GetFormById(id).Obj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0));
         return outSequence;
     }
@@ -100,4 +107,22 @@ public class FormManager : MonoBehaviour
     }
 
     public Form GetFormById(string id) => forms.Where(f => f.Id == id).First();
+
+    public void ChangeBackgroundColor()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (activeForm.Id == QuizForms[i])
+            {
+                backgroundColor.color = quiz.BackgroundColor;
+                break;
+            }
+            else
+            {
+                backgroundColor.color = new Color((float)32.0, (float)36.0, (float)66.0, (float)255.0);
+            }
+        }
+        
+        
+    }
 }

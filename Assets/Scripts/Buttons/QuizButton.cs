@@ -1,10 +1,13 @@
+using System;
 using DG.Tweening;
 using Net.Packets.Serverbound;
 using System.Collections;
 using System.Collections.Generic;
+using Net.Packets;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class QuizButton : MonoBehaviour
+public class QuizButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public int quizId;
     private GameObject content;
@@ -17,15 +20,25 @@ public class QuizButton : MonoBehaviour
     }
     public void OnPressed()
     {
-        LocalClient.instance.SendPacket(new CreateLobbyPacket() { QuizId = quizId });
+        LocalClient.instance.SendPacket(new CreateLobbyPacket { QuizId = quizId });
     }
 
-    public void OnHover()
+    public void OnPublishPressed()
+    {
+        LocalClient.instance.SendPacket(new EditQuizPacket {QuizId = quizId, Type = EditQuizType.Publish});
+    }
+
+    public void OnEditPressed()
+    {
+        QuizEditor.Instance.OnEditQuizPressed(quizId);
+    }
+    
+    public void OnPointerEnter(PointerEventData eventData)
     {
         content.transform.DOLocalMoveY(-25, 0.25f);
     }
 
-    public void OnExitHover()
+    public void OnPointerExit(PointerEventData eventData)
     {
         content.transform.DOLocalMoveY(startYPos, 0.25f);
     }
