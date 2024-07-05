@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using WizzServer.Models;
 
 
 public enum ModerationStatus
@@ -21,13 +19,13 @@ public class Quiz
 	public int QuestionCount { get; set; }
 	public int AuthorId { get; set; }
 	public ModerationStatus ModerationStatus { get; set; }
+	public int Color { get; set; }
+	public float Score { get; set; }
 	public List<QuizQuestion> Questions { get; set; }
-	
-	public Color BackgroundColor { get; set; }
-	
+
 	public List<string> Hashtags { get; set; }
 
-	public void Serialize(WizzStream stream, bool ignoreQuestions = true)
+	public void Serialize(WizzStream stream, bool includeQuestions = false)
 	{
 		stream.WriteVarInt(Id);
 		stream.WriteString(Name);
@@ -36,16 +34,18 @@ public class Quiz
 		stream.WriteVarInt(QuestionCount);
 		stream.WriteVarInt(AuthorId);
 		stream.WriteVarInt(ModerationStatus);
+		stream.WriteVarInt(Color);
+		stream.WriteVarInt((int)(Score * 10));
 
-		if (ignoreQuestions)
-		{
-			stream.WriteByte(0);
-		}
-		else
+		if (includeQuestions)
 		{
 			stream.WriteVarInt(Questions.Count);
 			for (int i = 0; i < Questions.Count; i++)
-				Questions[i].Serialize(stream);
+				Questions[i].Serialize(stream, true);
+		}
+		else
+		{
+			stream.WriteByte(0);
 		}
 	}
 
@@ -61,6 +61,8 @@ public class Quiz
 		quiz.QuestionCount = stream.ReadVarInt();
 		quiz.AuthorId = stream.ReadVarInt();
 		quiz.ModerationStatus = (ModerationStatus)stream.ReadVarInt();
+		quiz.Color = stream.ReadVarInt();
+		quiz.Score = stream.ReadVarInt() / 10f;
 
 		int count = stream.ReadVarInt();
 		quiz.Questions = new List<QuizQuestion>();
@@ -81,7 +83,6 @@ public class Quiz
 		quiz.Questions = new();
 		foreach (var question in Questions)
 			quiz.Questions.Add(question.Clone());
-		
 		return quiz;
 	}
 }

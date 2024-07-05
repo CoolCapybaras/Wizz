@@ -47,10 +47,10 @@ namespace Net.Packets
 			using var packetStream = new WizzStream();
 			packetStream.WriteVarInt(Type);
 			if (Type == EditQuizType.Upload)
-				Quiz.Serialize(packetStream, false);
+				Quiz.Serialize(packetStream, true);
 			else
 				packetStream.WriteVarInt(QuizId);
-			
+
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);
 			stream.WriteVarInt(Id);

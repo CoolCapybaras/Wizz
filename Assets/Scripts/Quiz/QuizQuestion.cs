@@ -4,7 +4,10 @@ using System.Linq;
 public enum QuizQuestionType
 {
 	Default,
-	TrueOrFalse
+	TrueOrFalse,
+	Multiple,
+	Input,
+	Match
 }
 
 public class QuizQuestion
@@ -14,9 +17,9 @@ public class QuizQuestion
 	public List<string> Answers { get; set; }
 	public ByteImage Image { get; set; }
 	public int Time { get; set; }
-	public int AnswerIndex { get; set; }
+	public QuizAnswer RightAnswer { get; set; }
 
-	public void Serialize(WizzStream stream)
+	public void Serialize(WizzStream stream, bool includeRightAnswer = false)
 	{
 		stream.WriteVarInt(Type);
 		stream.WriteString(Question);
@@ -25,6 +28,9 @@ public class QuizQuestion
 			stream.WriteString(Answers[i]);
 		stream.WriteImage(Image);
 		stream.WriteVarInt(Time);
+		stream.WriteBoolean(includeRightAnswer);
+		if (includeRightAnswer)
+			RightAnswer.Serialize(stream);
 	}
 
 	public static QuizQuestion Deserialize(WizzStream stream)
@@ -40,6 +46,20 @@ public class QuizQuestion
 
 		question.Image = stream.ReadImage();
 		question.Time = stream.ReadVarInt();
+		if (stream.ReadBoolean())
+			question.RightAnswer = QuizAnswer.Deserialize(stream);
+		return question;
+	}
+
+	public QuizQuestion Clone()
+	{
+		var question = new QuizQuestion();
+		question.Type = Type;
+		question.Question = Question;
+		question.Answers = Answers.ToList();
+		question.Image = new ByteImage(Image.data);
+		question.Time = Time;
+		question.RightAnswer = RightAnswer;
 		return question;
 	}
 

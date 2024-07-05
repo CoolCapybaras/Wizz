@@ -3,26 +3,16 @@ using System.Threading.Tasks;
 
 namespace Net.Packets.Serverbound
 {
-	public enum SearchType
+	public class UpdateQuizRating : IPacket
 	{
-		Default,
-		Author,
-		History
-	}
+		public int Id => 25;
 
-	public class SearchPacket : IPacket
-	{
-		public int Id => 3;
+		public int Score { get; set; }
 
-		public string QuizName { get; set; }
-		public SearchType SearchType { get; set; }
-		public int Offset { get; set; }
-		public int Count { get; set; }
-
-		public static SearchPacket Deserialize(byte[] data)
+		public static UpdateQuizRating Deserialize(byte[] data)
 		{
 			using var stream = new WizzStream(data);
-			var packet = new SearchPacket();
+			var packet = new UpdateQuizRating();
 			packet.Populate(stream);
 			return packet;
 		}
@@ -35,19 +25,13 @@ namespace Net.Packets.Serverbound
 
 		public void Populate(WizzStream stream)
 		{
-			QuizName = stream.ReadString();
-			SearchType = (SearchType)stream.ReadVarInt();
-			Offset = stream.ReadVarInt();
-			Count = stream.ReadVarInt();
+			Score = stream.ReadVarInt();
 		}
 
 		public void Serialize(WizzStream stream)
 		{
 			using var packetStream = new WizzStream();
-			packetStream.WriteString(QuizName);
-			packetStream.WriteVarInt(SearchType);
-			packetStream.WriteVarInt(Offset);
-			packetStream.WriteVarInt(Count);
+			packetStream.WriteVarInt(Score);
 
 			stream.Lock.Wait();
 			stream.WriteVarInt(Id.GetVarIntLength() + (int)packetStream.Length);
