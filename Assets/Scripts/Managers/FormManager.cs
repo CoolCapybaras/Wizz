@@ -19,8 +19,6 @@ public class FormManager : MonoBehaviour
     
     public Quiz quiz;
 
-    public RawImage backgroundColor;
-
     private void Awake()
     {
         WarmupForms();
@@ -107,22 +105,4 @@ public class FormManager : MonoBehaviour
     }
 
     public Form GetFormById(string id) => forms.Where(f => f.Id == id).First();
-
-    public void ChangeBackgroundColor()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            if (activeForm.Id == QuizForms[i])
-            {
-               // backgroundColor.color = quiz.Color;
-                break;
-            }
-            else
-            {
-                backgroundColor.color = new Color((float)32.0, (float)36.0, (float)66.0, (float)255.0);
-            }
-        }
-        
-        
-    }
 }

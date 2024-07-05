@@ -62,5 +62,15 @@ namespace Assets.Scripts.Misc
                 return gradient;
             }
         }
+
+        public static Color32 GetColorFromInt(int hexColor)
+        {
+            var hexValue = hexColor.ToString("X");
+            hexValue = hexValue.Insert(0, "#");
+            var result = new Color();
+            ColorUtility.TryParseHtmlString(hexValue, out result);
+
+            return result;
+        }
     }
 }

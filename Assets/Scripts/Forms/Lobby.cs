@@ -107,6 +107,7 @@ public class Lobby : MonoBehaviour, IForm
         gameManager.currentClients = packet.Clients.ToList();
         gameManager.isInLobby = true;
         FormManager.Instance.ChangeForm("lobby");
+        OverlayManager.Instance.ChangeBackgroundColor();
     }
 
     public void OnGameStartPressed()
@@ -119,10 +120,5 @@ public class Lobby : MonoBehaviour, IForm
         FormManager.Instance.ChangeForm("quizloading");
         gameManager.questions = packet.QuizQuestions;
         gameManager.isInStartedGame = true;
-    }
-
-    public void ChangeBackgroundColor()
-    {
-        
     }
 }
