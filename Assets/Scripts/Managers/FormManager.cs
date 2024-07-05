@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FormManager : MonoBehaviour
 {
@@ -12,7 +13,13 @@ public class FormManager : MonoBehaviour
         Out
     }
 
+    public List<string> QuizForms = new();
+
     public static FormManager Instance;
+    
+    public Quiz quiz;
+
+    public RawImage backgroundColor;
 
     private void Awake()
     {
@@ -100,4 +107,22 @@ public class FormManager : MonoBehaviour
     }
 
     public Form GetFormById(string id) => forms.Where(f => f.Id == id).First();
+
+    public void ChangeBackgroundColor()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (activeForm.Id == QuizForms[i])
+            {
+                backgroundColor.color = quiz.BackgroundColor;
+                break;
+            }
+            else
+            {
+                backgroundColor.color = new Color((float)32.0, (float)36.0, (float)66.0, (float)255.0);
+            }
+        }
+        
+        
+    }
 }

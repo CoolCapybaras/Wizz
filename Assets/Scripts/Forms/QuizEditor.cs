@@ -35,8 +35,12 @@ public class QuizEditor : MonoBehaviour, IForm
         public VerticalLayoutGroup mainLayout;
 
         public Sprite defaultSprite;
+
+        public Color backgroundColor;
     }
 
+    //public Color backgroundColor;
+    
     public Form form;
 
     public List<Question> questions = new List<Question>();
@@ -406,6 +410,11 @@ public class QuizEditor : MonoBehaviour, IForm
         };
         
         FillUI();
+    }
+
+    public void BackgroundColorChange()
+    {
+        quiz.BackgroundColor = form.backgroundColor;
     }
     
     public void InitializeForm()
