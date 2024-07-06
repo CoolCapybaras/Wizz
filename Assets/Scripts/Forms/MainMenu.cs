@@ -103,7 +103,8 @@ public class MainMenu : MonoBehaviour, IForm
             obj.transform.GetChild(0).GetComponent<RawImage>().texture = quiz.Image.GetTexture();
             transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = quiz.Description;
             transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = quiz.Name;
-            obj.transform.GetChild(7).GetChild(0).GetComponent<Image>().fillAmount = Math.Clamp(quiz.Score, 0, 1);
+            obj.transform.GetChild(7).GetChild(0).GetComponent<Image>().fillAmount = 
+                Helpers.ConvertRange(0, 5, 0, 1, quiz.Score);
             obj.transform.GetChild(7).GetChild(1).GetComponent<TextMeshProUGUI>().text = quiz.Score.ToString();
             // TODO: transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = quiz.Hashtags;
             if (quiz.AuthorId != LocalClient.instance.Id)
