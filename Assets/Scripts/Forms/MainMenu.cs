@@ -99,26 +99,28 @@ public class MainMenu : MonoBehaviour, IForm
             var obj = Instantiate(form.quizPrefab, form.quizzesLayout);
             obj.GetComponent<QuizButton>().quizId = quiz.Id;
 
-            var transform = obj.transform.GetChild(1);
+            var transform = obj.transform.GetChild(2);
             obj.transform.GetChild(0).GetComponent<RawImage>().texture = quiz.Image.GetTexture();
             transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = quiz.Description;
             transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = quiz.Name;
+            obj.transform.GetChild(7).GetChild(0).GetComponent<Image>().fillAmount = Math.Clamp(quiz.Score, 0, 1);
+            obj.transform.GetChild(7).GetChild(1).GetComponent<TextMeshProUGUI>().text = quiz.Score.ToString();
             // TODO: transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = quiz.Hashtags;
             if (quiz.AuthorId != LocalClient.instance.Id)
             {
-                obj.transform.GetChild(3).gameObject.SetActive(false);
                 obj.transform.GetChild(4).gameObject.SetActive(false);
                 obj.transform.GetChild(5).gameObject.SetActive(false);
+                obj.transform.GetChild(6).gameObject.SetActive(false);
             }
             else
             {
                 if (quiz.ModerationStatus is not (ModerationStatus.ModerationRejected
                     or ModerationStatus.NotModerated))
                 {
-                    obj.transform.GetChild(5).gameObject.SetActive(false);
+                    obj.transform.GetChild(6).gameObject.SetActive(false);
                     continue;
                 }
-                obj.transform.GetChild(5).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
+                obj.transform.GetChild(6).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
                     quiz.ModerationStatus == ModerationStatus.NotModerated ? "Не опубликована" : "Не прошла модерацию";
             }
             

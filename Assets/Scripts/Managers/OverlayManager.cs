@@ -140,6 +140,9 @@ public class OverlayManager : MonoBehaviour
     
     public void ChangeBackgroundColor(HexColor color)
     {
+        if ((int)color == 0)
+            return;
+        
         form.backgroundColor.color = Colors.GetColorFromInt((int)color);
     }
 

@@ -15,7 +15,7 @@ public class QuizButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Awake()
     {
-        content = transform.GetChild(1).gameObject;
+        content = transform.GetChild(2).gameObject;
         startYPos = content.transform.localPosition.y;
     }
     public void OnPressed()
