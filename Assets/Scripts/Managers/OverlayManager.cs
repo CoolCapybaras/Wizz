@@ -105,7 +105,7 @@ public class OverlayManager : MonoBehaviour
     {
         GameManager.Instance.EnsureLeavedLobby();
         GameManager.Instance.EnsureLeavedStartedGame();
-        ChangeBackgroundColor();
+        ResetBackgroundColor();
     }
 
     public void ChangeFullscreen()
@@ -124,8 +124,7 @@ public class OverlayManager : MonoBehaviour
 
     public void OnProfileEditPressed()
     {
-        GameManager.Instance.EnsureLeavedLobby();
-        GameManager.Instance.EnsureLeavedStartedGame();
+        EnsureLeaved();
 
         FormManager.Instance.ChangeForm("profileedit");
     }
@@ -139,16 +138,13 @@ public class OverlayManager : MonoBehaviour
             .Play();
     }
     
-    public void ChangeBackgroundColor()
+    public void ChangeBackgroundColor(HexColor color)
     {
-        if (gameManager.isInStartedGame || gameManager.isInLobby)
-        {
-            var color = Colors.GetColorFromInt((int)GameManager.Instance.currentQuiz.Color);
-            form.backgroundColor.color = color;
-        }
-        else
-        {
-            form.backgroundColor.color = Colors.GetColorFromInt((int)HexColor.Default);
-        }
+        form.backgroundColor.color = Colors.GetColorFromInt((int)color);
+    }
+
+    public void ResetBackgroundColor()
+    {
+        form.backgroundColor.color = Colors.GetColorFromInt((int)HexColor.Default);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -10,11 +11,13 @@ public enum ModerationStatus
 	ModerationRejected
 }
 
+[Serializable]
 public enum HexColor
 {
 	Default = 2106434,
-	Red = 4003861,
-	Green = 2044701
+	Purple = 1972022,
+	Green = 1387568,
+	Red = 2823472,
 }
 
 public class Quiz
