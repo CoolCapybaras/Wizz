@@ -49,6 +49,7 @@ public class EndGame : MonoBehaviour, IForm
 
     public void OnMainMenuPressed()
     {
+        OverlayManager.Instance.EnsureLeaved();
         FormManager.Instance.ChangeForm("mainmenu", FormManager.AnimType.Out);
     }
 

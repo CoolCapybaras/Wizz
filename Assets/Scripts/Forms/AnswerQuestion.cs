@@ -180,7 +180,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
         gameManager.isInLobby = false;
         FormManager.Instance.ChangeForm("endgame");
         gameManager.isInStartedGame = false;
-        OverlayManager.Instance.ChangeBackgroundColor();
+        OverlayManager.Instance.ChangeBackgroundColor(gameManager.currentQuiz.Color);
     }
 
     public void OnRoundEnded(RoundEndedPacket packet)

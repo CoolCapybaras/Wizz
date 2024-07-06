@@ -367,6 +367,13 @@ public class QuizEditor : MonoBehaviour, IForm
 
         FillQuestionsUI();
         FillHashtagsUI();
+        OnBackgroundColorButtonPressed((int)quiz.Color);
+    }
+
+    public void OnBackgroundColorButtonPressed(int color)
+    {
+        quiz.Color = (HexColor)color;
+        OverlayManager.Instance.ChangeBackgroundColor(quiz.Color);
     }
 
     private void FillQuestionsUI()
@@ -404,11 +411,6 @@ public class QuizEditor : MonoBehaviour, IForm
         };
         
         FillUI();
-    }
-
-    public void BackgroundColorChange()
-    {
-       // quiz.Color = form.backgroundColor;
     }
     
     public void InitializeForm()
