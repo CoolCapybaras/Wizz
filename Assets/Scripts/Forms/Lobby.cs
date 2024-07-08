@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Net.Packets.Clientbound;
 using System.Linq;
 using Net.Packets.Serverbound;
+using Image = UnityEngine.UIElements.Image;
 
 public class Lobby : MonoBehaviour, IForm
 {

@@ -26,6 +26,9 @@ public class EndGame : MonoBehaviour, IForm
         public GameObject scorePrefab;
 
         public ParticleSystem[] particles;
+
+        public GameObject rateObj;
+        public GameObject unRateobj;
     }
     
     
@@ -98,5 +101,14 @@ public class EndGame : MonoBehaviour, IForm
         SoundManager.Instance.StopMusic();
         SoundManager.Instance.SetLowPassFilter(false, 1);
         SoundManager.Instance.PlayMusic("menu", true);
+
+        if (LocalClient.instance.Authorized)
+        {
+            form.rateObj.SetActive(true);
+            var sequence1 = DOTween.Sequence();
+            sequence1.Insert(0, form.unRateobj.GetComponent<CanvasGroup>().DOFade(1, 0.25f).From(0))
+                .Insert(0, form.unRateobj.transform.DOScale(1, 0.25f).From(0))
+                .Play();
+        }
     }
 }
