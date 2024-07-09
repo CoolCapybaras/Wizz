@@ -14,7 +14,8 @@ public class MyQuizzes : MonoBehaviour, IForm
     public enum QuizzesType
     {
         My,
-        Server
+        Server,
+        History
     }
 
     [Serializable]
@@ -56,10 +57,26 @@ public class MyQuizzes : MonoBehaviour, IForm
     {
         if (SearchResultPacket.RequestQueue.Count != 0) return;
         
-        LocalClient.instance.SendPacket(type == QuizzesType.Server
-            ? new SearchPacket { QuizName = quizName, Count = count, Offset = offset}
-            : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, SearchType = SearchType.Author });
-        SearchResultPacket.RequestQueue.Enqueue(1);
+        // LocalClient.instance.SendPacket(type == QuizzesType.Server
+        //     ? new SearchPacket { QuizName = quizName, Count = count, Offset = offset}
+        //     : new SearchPacket { QuizName = quizName, Count = count, Offset = offset, SearchType = SearchType.Author });
+        // SearchResultPacket.RequestQueue.Enqueue(1);
+
+        if (type == QuizzesType.Server)
+        {
+            LocalClient.instance.SendPacket(new SearchPacket { QuizName = quizName, Count = count, Offset = offset});
+            SearchResultPacket.RequestQueue.Enqueue(1);
+        }
+        else if (type == QuizzesType.My)
+        {
+            LocalClient.instance.SendPacket(new SearchPacket { QuizName = quizName, Count = count, Offset = offset, SearchType = SearchType.Author });
+            SearchResultPacket.RequestQueue.Enqueue(1);
+        }
+        else
+        {
+            LocalClient.instance.SendPacket(new SearchPacket { QuizName = quizName, Count = count, Offset = offset, SearchType = SearchType.History });
+            SearchResultPacket.RequestQueue.Enqueue(1);
+        }
     }
     
     private void RemoveQuizzesFromLayout()
@@ -135,6 +152,8 @@ public class MyQuizzes : MonoBehaviour, IForm
         }
         else if (type == QuizzesType.Server)
             form.topText.text = "Поиск викторин";
+        else if (type == QuizzesType.History)
+            form.topText.text = "История прохождения викторин";
         
         quizzes.Clear();
         quizzesListEnded = false;

@@ -40,6 +40,7 @@ public class OverlayManager : MonoBehaviour
         public GameObject logoutButton;
         public GameObject exitObj;
         public GameObject unExitObj;
+        public GameObject histObj;
     }
 
     public Form form;
@@ -58,6 +59,7 @@ public class OverlayManager : MonoBehaviour
     {
         form.toMainMenuButton.SetActive(active);
         form.createNewGameButton.SetActive(active);
+        form.histObj.SetActive(active);
     }
 
     public void SetActiveBottomButtons(bool active)
@@ -149,5 +151,12 @@ public class OverlayManager : MonoBehaviour
     public void ResetBackgroundColor()
     {
         form.backgroundColor.color = Colors.GetColorFromInt((int)HexColor.Default);
+    }
+
+    public void OnQuizHistoryPressed()
+    {
+        EnsureLeaved();
+        
+        
     }
 }
