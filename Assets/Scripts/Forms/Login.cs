@@ -23,7 +23,7 @@ public class Login : MonoBehaviour, IForm
     {
         if (!UpdateProfilePacket.NameRegex.IsMatch(inputField.text))
         {
-            OverlayManager.Instance.ShowInfo("Имя должно быть от 3 до 24 символов и содержать только буквы или цифры", InfoType.Error);
+            OverlayManager.Instance.ShowInfo("РРјСЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 24 СЃРёРјРІРѕР»РѕРІ Рё СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹ РёР»Рё С†РёС„СЂС‹", InfoType.Error);
             return;
         }
         

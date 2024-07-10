@@ -48,7 +48,7 @@ public class MainMenu : MonoBehaviour, IForm
     public void InitializeForm()
     {
         AnimateForm();
-        form.topGreetingText.text = $"Пора создавать новое, {localClient.Name}!";
+        form.topGreetingText.text = $"РџРѕСЂР° СЃРѕР·РґР°РІР°С‚СЊ РЅРѕРІРѕРµ, {localClient.Name}!";
         quizzes.Clear();
         SearchForQuizzes();
     }
@@ -122,7 +122,7 @@ public class MainMenu : MonoBehaviour, IForm
                     continue;
                 }
                 obj.transform.GetChild(6).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
-                    quiz.ModerationStatus == ModerationStatus.NotModerated ? "Не опубликована" : "Не прошла модерацию";
+                    quiz.ModerationStatus == ModerationStatus.NotModerated ? "РќРµ РѕРїСѓР±Р»РёРєРѕРІР°РЅР°" : "РќРµ РїСЂРѕС€Р»Р° РјРѕРґРµСЂР°С†РёСЋ";
             }
             
             yield return null;

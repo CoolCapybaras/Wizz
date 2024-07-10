@@ -40,7 +40,7 @@ public class Lobby : MonoBehaviour, IForm
 
     public void OnClientsListChanged()
     {
-        form.playersCountText.text = $"Количество игроков: {gameManager.currentClients.Count}";
+        form.playersCountText.text = $"РљРѕР»РёС‡РµСЃС‚РІРѕ РёРіСЂРѕРєРѕРІ: {gameManager.currentClients.Count}";
         InstantiatePlayers();
     }
 
@@ -66,15 +66,15 @@ public class Lobby : MonoBehaviour, IForm
     public void InitializeForm()
     {
         gameManager.isHost = false;
-        form.quizNameText.text = $"Лобби \"{gameManager.currentQuiz.Name}\"";
-        form.lobbyCodeText.text = $"Код доступа: #{gameManager.currentLobbyId}";
+        form.quizNameText.text = $"Р›РѕР±Р±Рё \"{gameManager.currentQuiz.Name}\"";
+        form.lobbyCodeText.text = $"РљРѕРґ РґРѕСЃС‚СѓРїР°: #{gameManager.currentLobbyId}";
         form.quizDescriptionText.text = gameManager.currentQuiz.Description;
         OnClientsListChanged();
 
         form.quizCard.name.text = gameManager.currentQuiz.Name;
         form.quizCard.description.text = gameManager.currentQuiz.Description;
         form.quizCard.image.texture = gameManager.currentQuiz.Image.GetTexture();
-        // TODO: form.quizCard.hashtags заполнить
+        // TODO: form.quizCard.hashtags Р·Р°РїРѕР»РЅРёС‚СЊ
 
         if (gameManager.currentClients.Count != 1)
         {

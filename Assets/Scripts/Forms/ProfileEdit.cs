@@ -39,7 +39,7 @@ public class ProfileEdit : MonoBehaviour, IForm
     {
         if (!UpdateProfilePacket.NameRegex.IsMatch(form.nicknameInputField.text))
         {
-            OverlayManager.Instance.ShowInfo("Имя должно быть от 3 до 24 символов и содержать только буквы или цифры", InfoType.Error);
+            OverlayManager.Instance.ShowInfo("РРјСЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 3 РґРѕ 24 СЃРёРјРІРѕР»РѕРІ Рё СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ Р±СѓРєРІС‹ РёР»Рё С†РёС„СЂС‹", InfoType.Error);
             return;
         }
 
@@ -55,7 +55,7 @@ public class ProfileEdit : MonoBehaviour, IForm
     {
         if (!LocalClient.instance.Authorized)
         {
-            OverlayManager.Instance.ShowInfo("Анонимно авторизованные игроки не могут менять аватарку", InfoType.Error);
+            OverlayManager.Instance.ShowInfo("РђРЅРѕРЅРёРјРЅРѕ Р°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹Рµ РёРіСЂРѕРєРё РЅРµ РјРѕРіСѓС‚ РјРµРЅСЏС‚СЊ Р°РІР°С‚Р°СЂРєСѓ", InfoType.Error);
             return;    
         }
         

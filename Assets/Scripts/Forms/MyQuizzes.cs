@@ -137,7 +137,7 @@ public class MyQuizzes : MonoBehaviour, IForm
                     continue;
                 }
                 obj.transform.GetChild(6).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
-                    quiz.ModerationStatus == ModerationStatus.NotModerated ? "Не опубликована" : "Не прошла модерацию";
+                    quiz.ModerationStatus == ModerationStatus.NotModerated ? "РќРµ РѕРїСѓР±Р»РёРєРѕРІР°РЅР°" : "РќРµ РїСЂРѕС€Р»Р° РјРѕРґРµСЂР°С†РёСЋ";
             }
 
             yield return null;
@@ -148,12 +148,12 @@ public class MyQuizzes : MonoBehaviour, IForm
     {
         if (type == QuizzesType.My)
         {
-            form.topText.text = "Мои викторины";
+            form.topText.text = "РњРѕРё РІРёРєС‚РѕСЂРёРЅС‹";
         }
         else if (type == QuizzesType.Server)
-            form.topText.text = "Поиск викторин";
+            form.topText.text = "РџРѕРёСЃРє РІРёРєС‚РѕСЂРёРЅ";
         else if (type == QuizzesType.History)
-            form.topText.text = "История прохождения викторин";
+            form.topText.text = "РСЃС‚РѕСЂРёСЏ РїСЂРѕС…РѕР¶РґРµРЅРёСЏ РІРёРєС‚РѕСЂРёРЅ";
         
         quizzes.Clear();
         quizzesListEnded = false;

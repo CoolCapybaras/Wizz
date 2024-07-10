@@ -101,14 +101,14 @@ public class AnswerQuestion : MonoBehaviour, IForm
         SetActiveAnswerButtons(false);
         answeredIndex = index;
         var answer = new QuizAnswer();
-        // TODO: поддерживать разные типы вопросов
+        // TODO: РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ СЂР°Р·РЅС‹Рµ С‚РёРїС‹ РІРѕРїСЂРѕСЃРѕРІ
         answer.Id = answeredIndex;
         LocalClient.instance.SendPacket(new AnswerGamePacket() { Answer = answer});
     }
 
     public void OnRightAnswer(RightAnswerPacket packet)
     {
-        // TODO: поддерживать разные типы вопросов
+        // TODO: РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ СЂР°Р·РЅС‹Рµ С‚РёРїС‹ РІРѕРїСЂРѕСЃРѕРІ
         PrepareResultUI(packet.Answer.Id, packet.RoundScore);
         timerStarted = false;
         HighlightButton(packet.Answer.Id);
@@ -132,15 +132,15 @@ public class AnswerQuestion : MonoBehaviour, IForm
         if (answeredIndex == answerId)
         {
             SoundManager.Instance.PlayShortClip("success");
-            form.resultText.text = "Ответ верный!";
-            form.scoreText.text = $"+{roundScore} очков\nЖдем продолжения игры...";
+            form.resultText.text = "РћС‚РІРµС‚ РІРµСЂРЅС‹Р№!";
+            form.scoreText.text = $"+{roundScore} РѕС‡РєРѕРІ\nР–РґРµРј РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РёРіСЂС‹...";
             form.resultText.color = Colors.yellow;
         }
         else
         {
             SoundManager.Instance.PlayShortClip("fail");
-            form.resultText.text = "Ответ неверный!";
-            form.scoreText.text = "Ждем продолжение игры...";
+            form.resultText.text = "РћС‚РІРµС‚ РЅРµРІРµСЂРЅС‹Р№!";
+            form.scoreText.text = "Р–РґРµРј РїСЂРѕРґРѕР»Р¶РµРЅРёРµ РёРіСЂС‹...";
             form.resultText.color = Colors.red;
         }
 

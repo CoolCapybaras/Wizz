@@ -59,7 +59,7 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
         form.questionText.text = question.Question;
         form.questionImage.texture = question.Image.GetTexture();
-        form.questionsCount.text = $"Вопрос {gameManager.currentQuestionIndex} из {gameManager.currentQuiz.QuestionCount}";
+        form.questionsCount.text = $"Р’РѕРїСЂРѕСЃ {gameManager.currentQuestionIndex} РёР· {gameManager.currentQuiz.QuestionCount}";
         AnimateQuestionType();
         time = 0;
         timerStarted = true;
@@ -75,11 +75,11 @@ public class QuizQuestionForm : MonoBehaviour, IForm
         switch (question.Type)
         {
             case QuizQuestionType.Default:
-                form.questionTypeText.text = "Обычный вопрос";
+                form.questionTypeText.text = "РћР±С‹С‡РЅС‹Р№ РІРѕРїСЂРѕСЃ";
                 form.questionTypeImage.sprite = form.defaultQuestionSprite;
                 break;
             case QuizQuestionType.TrueOrFalse:
-                form.questionTypeText.text = "Правда или ложь";
+                form.questionTypeText.text = "РџСЂР°РІРґР° РёР»Рё Р»РѕР¶СЊ";
                 form.questionTypeImage.sprite = form.trueOrFalseQuestionSprite;
                 break;
         }
