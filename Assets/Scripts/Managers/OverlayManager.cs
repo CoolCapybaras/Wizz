@@ -156,7 +156,6 @@ public class OverlayManager : MonoBehaviour
     public void OnQuizHistoryPressed()
     {
         EnsureLeaved();
-        
-        
+        FormManager.Instance.ChangeForm("myquizzes");
     }
 }

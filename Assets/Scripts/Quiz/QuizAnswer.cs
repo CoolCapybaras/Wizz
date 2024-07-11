@@ -32,4 +32,24 @@
 			answer.Input = stream.ReadString();
 		return answer;
 	}
+	
+	public override bool Equals(object? obj)
+	{
+		if (obj is not QuizAnswer answer || answer.Type != Type)
+			return false;
+
+		if (Type == QuizQuestionType.Default || Type == QuizQuestionType.TrueOrFalse)
+			return Id == answer.Id;
+		if (Type == QuizQuestionType.Multiple || Type == QuizQuestionType.Match)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (Ids[i] != answer.Ids[i])
+					return false;
+			}
+			return true;
+		}
+		
+		return Input == answer.Input;
+	}
 }

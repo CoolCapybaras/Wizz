@@ -82,6 +82,10 @@ public class QuizQuestionForm : MonoBehaviour, IForm
                 form.questionTypeText.text = "Правда или ложь";
                 form.questionTypeImage.sprite = form.trueOrFalseQuestionSprite;
                 break;
+            case QuizQuestionType.Multiple:
+                form.questionTypeText.text = "Множественный выбор";
+                // TODO: sprite
+                break;
         }
     }
 

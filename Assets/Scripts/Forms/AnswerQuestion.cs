@@ -38,6 +38,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
         public GameObject continueButton;
         public Transform answersLayout;
         public GameObject answerPrefab;
+
+        public GameObject submitAnswersButton;
     }
 
     public Form form;
@@ -47,6 +49,8 @@ public class AnswerQuestion : MonoBehaviour, IForm
     private float questionTime;
 
     private int answeredIndex;
+
+    private QuizQuestion currentQuestion;
 
     private void Update()
     {
@@ -62,18 +66,29 @@ public class AnswerQuestion : MonoBehaviour, IForm
     {
         SetActiveAnswerButtons(true);
         form.resultObj.SetActive(false);
-        var question = gameManager.questions[gameManager.currentQuestionIndex - 1];
-        form.questionText.text = question.Question;
-        form.questionImage.texture = question.Image.GetTexture();
+        
+        currentQuestion = gameManager.questions[gameManager.currentQuestionIndex - 1];
+        
+        currentQuestion.RightAnswer = new QuizAnswer();
+        currentQuestion.RightAnswer.Ids = new byte[4];
+        currentQuestion.RightAnswer.Type = currentQuestion.Type;
+        
+        form.questionText.text = currentQuestion.Question;
+        form.questionImage.texture = currentQuestion.Image.GetTexture();
         DestroyLayoutChildren(form.answersLayout);
-        for (int i = 0; i < question.Answers.Count; ++i)
+        for (int i = 0; i < currentQuestion.Answers.Count; ++i)
         {
-            var answer = question.Answers[i];
+            var answer = currentQuestion.Answers[i];
             form.answerButtons[i].obj = InstantiateAnswerButton(form.answerButtons[i].defaultColor, answer, i);
         }
+        
+        if (currentQuestion.Type == QuizQuestionType.Multiple)
+            form.submitAnswersButton.SetActive(true);
+        else
+            form.submitAnswersButton.SetActive(false);
 
         time = 0;
-        questionTime = question.Time;
+        questionTime = currentQuestion.Time;
         timerStarted = true;
         SoundManager.Instance.SetLowPassFilter(false, 0, false);
         SoundManager.Instance.PlayMusic("ingame");
@@ -98,24 +113,80 @@ public class AnswerQuestion : MonoBehaviour, IForm
     
     public void OnPlayerAnswer(int index)
     {
-        SetActiveAnswerButtons(false);
-        answeredIndex = index;
-        var answer = new QuizAnswer();
-        // TODO: поддерживать разные типы вопросов
-        answer.Id = answeredIndex;
-        LocalClient.instance.SendPacket(new AnswerGamePacket() { Answer = answer});
+        switch (currentQuestion.Type)
+        {
+            case QuizQuestionType.Default:
+            case QuizQuestionType.TrueOrFalse:
+                SetActiveAnswerButtons(false);
+                currentQuestion.RightAnswer.Id = index;
+                var answer = new QuizAnswer();
+                answer.Id = currentQuestion.RightAnswer.Id;
+                LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = answer});
+                break;
+            case QuizQuestionType.Multiple:
+                if (currentQuestion.RightAnswer.Ids[index] == 0)
+                {
+                    currentQuestion.RightAnswer.Ids[index] = 1;
+                    SetAnswerChecked(index, true);
+                }
+                else
+                {
+                    currentQuestion.RightAnswer.Ids[index] = 0;
+                    SetAnswerChecked(index, false);
+                }
+                break;
+        }
     }
 
+    public void SubmitAnswer()
+    {
+        if (currentQuestion.Type == QuizQuestionType.Multiple)
+            LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = currentQuestion.RightAnswer });
+    }
+
+    public void SetAnswerChecked(int index, bool isChecked)
+    {
+        var button = form.answerButtons[index];
+        var buttonImage = button.obj.GetComponent<Image>();
+        if (isChecked)
+            buttonImage.color *= 0.5f;
+        else
+            buttonImage.color /= 0.5f;
+    }
+    
     public void OnRightAnswer(RightAnswerPacket packet)
     {
         // TODO: поддерживать разные типы вопросов
-        PrepareResultUI(packet.Answer.Id, packet.RoundScore);
+        PrepareResultUI(packet.Answer, packet.RoundScore);
         timerStarted = false;
-        HighlightButton(packet.Answer.Id);
+        switch (currentQuestion.Type)
+        {
+            case QuizQuestionType.Default:
+            case QuizQuestionType.TrueOrFalse:
+                HighlightButton(packet.Answer.Id);
+                break;
+            case QuizQuestionType.Multiple:
+                HighlightButtons(packet.Answer.Ids);
+                break;
+        }
         SoundManager.Instance.SetLowPassFilter(true, 1);
     }
 
-    public void PrepareResultUI(int answerId, int roundScore)
+    private void HighlightButtons(byte[] rightAnswers)
+    {
+        for (int i = 0; i < form.answersLayout.childCount; ++i)
+        {
+            var button = form.answerButtons[i];
+            button.obj.GetComponent<Button>().interactable = false;
+
+            if (rightAnswers[i] == 1)
+                button.obj.GetComponent<Image>().color = form.rightAnswerColor;
+            else
+                button.obj.GetComponent<Image>().color = form.wrongAnswerColor;
+        }
+    }
+
+    public void PrepareResultUI(QuizAnswer answer, int roundScore)
     {
         form.resultObj.SetActive(true);
         var sequence = DOTween.Sequence();
@@ -129,7 +200,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
             form.continueButton.SetActive(true);
 
 
-        if (answeredIndex == answerId)
+        if (answer.Equals(currentQuestion.RightAnswer))
         {
             SoundManager.Instance.PlayShortClip("success");
             form.resultText.text = "Ответ верный!";
@@ -143,7 +214,6 @@ public class AnswerQuestion : MonoBehaviour, IForm
             form.scoreText.text = "Ждем продолжение игры...";
             form.resultText.color = Colors.red;
         }
-
     }
 
     public void HighlightButton(int index)

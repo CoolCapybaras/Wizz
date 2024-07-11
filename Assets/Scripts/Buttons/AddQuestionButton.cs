@@ -11,7 +11,7 @@ public class AddQuestionButton : MonoBehaviour
     public void OnPressed()
     {
         isDropdownShown = !isDropdownShown;
-        questionsLayout.padding.top = isDropdownShown ? 100 : 0;
+        questionsLayout.padding.top = isDropdownShown ? dropdown.transform.childCount * 50 : 0;
         questionsLayout.SetLayoutVertical();
         dropdown.SetActive(isDropdownShown);
     }

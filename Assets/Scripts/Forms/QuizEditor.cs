@@ -81,17 +81,22 @@ public class QuizEditor : MonoBehaviour, IForm
             quiz.Questions[i].RightAnswer = new();
             quiz.Questions[i].Answers = new List<string>();
             quiz.Questions[i].RightAnswer.Id = -1;
+            quiz.Questions[i].RightAnswer.Ids = new byte[4];
+            quiz.Questions[i].RightAnswer.Type = type;
             quiz.Questions[i].Type = type;
             
             for (int m = 0; m < questions[i].answers.Count; m++)
             {
-                if (type == QuizQuestionType.Default)
+                switch (type)
                 {
-                    quiz.Questions[i].Answers.Add(string.Empty);
-                    continue;
+                    case QuizQuestionType.Default:
+                    case QuizQuestionType.Multiple:
+                        quiz.Questions[i].Answers.Add(string.Empty);
+                        break;
+                    case QuizQuestionType.TrueOrFalse:
+                        quiz.Questions[i].Answers.Add(m == 0 ? "Правда" : "Ложь");
+                        break;
                 }
-
-                quiz.Questions[i].Answers.Add(m == 0 ? "Правда" : "Ложь");
             }
         }
 
@@ -105,18 +110,36 @@ public class QuizEditor : MonoBehaviour, IForm
         DestroyLayoutChildren(parent);
         
         var answers = new List<GameObject>();
-        for (int j = 0; j < (type == QuizQuestionType.Default ? 4 : 2); ++j)
+
+        var iterLimit = 4;
+        switch (type)
         {
-            var answerObj = Instantiate(type == QuizQuestionType.Default
-                    ? form.defaultAnswerPrefab
-                    : form.trueFalseAnswerPrefab, 
-                parent);
+            case QuizQuestionType.TrueOrFalse:
+                iterLimit = 2;
+                break;
+        }
+        
+        for (int j = 0; j < iterLimit; ++j)
+        {
+            var answerPrefab = form.defaultAnswerPrefab;
+
+            switch (type)
+            {
+                case QuizQuestionType.TrueOrFalse:
+                    answerPrefab = form.trueFalseAnswerPrefab;
+                    break;
+                case QuizQuestionType.Multiple:
+                    answerPrefab = form.defaultAnswerPrefab;
+                    break;
+            }
+            
+            var answerObj = Instantiate(answerPrefab, parent);
 
             answerObj.GetComponent<QuizAnswerHelper>().AnswerIndex = answerIndex;
             answers.Add(answerObj);
-            if (type == QuizQuestionType.Default)
-                continue;
-            answerObj.transform.GetChild(1).GetComponent<TMP_InputField>().text = j == 0 ? "Правда" : "Ложь";
+            
+            if (type == QuizQuestionType.TrueOrFalse)
+                answerObj.transform.GetChild(1).GetComponent<TMP_InputField>().text = j == 0 ? "Правда" : "Ложь";
         }
 
         return answers;
@@ -189,6 +212,20 @@ public class QuizEditor : MonoBehaviour, IForm
     
     public void OnTogglePressed(int index, int answerIndex)
     {
+        switch (quiz.Questions[answerIndex].Type)
+        {
+            case QuizQuestionType.Default:
+            case QuizQuestionType.TrueOrFalse:
+                SetCorrectAnswerOnDefaultQuestion(index, answerIndex);
+                break;
+            case QuizQuestionType.Multiple:
+                SetCorrectAnswerOnMultipleQuestion(index, answerIndex);
+                break;
+        }
+    }
+
+    private void SetCorrectAnswerOnDefaultQuestion(int index, int answerIndex)
+    {
         for (int i = 0; i < questions[answerIndex].answers.Count; i++)
         {
             var toggle = questions[answerIndex].answers[i].GetComponent<Toggle>();
@@ -206,6 +243,13 @@ public class QuizEditor : MonoBehaviour, IForm
             quiz.Questions[answerIndex].RightAnswer.Id = -1;
         }
         quiz.Questions[answerIndex].RightAnswer.Id = index;
+    }
+
+    private void SetCorrectAnswerOnMultipleQuestion(int index, int answerIndex)
+    {
+        var toggle = questions[answerIndex].answers[index].GetComponent<Toggle>();
+        
+        quiz.Questions[answerIndex].RightAnswer.Ids[index] = toggle.isOn ? (byte)1 : (byte)0;
     }
     
     public void OnTimeValueChanged(int answerIndex)
@@ -316,10 +360,30 @@ public class QuizEditor : MonoBehaviour, IForm
                 OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указано время ответа", InfoType.Error);
             }
 
-            if (question.RightAnswer.Id == -1)
+            switch (question.Type)
             {
-                flag = false;
-                OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
+                case QuizQuestionType.Default:
+                case QuizQuestionType.TrueOrFalse:
+                    if (question.RightAnswer.Id == -1)
+                    {
+                        flag = false;
+                        OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
+                    }
+                    break;
+                case QuizQuestionType.Multiple:
+                    var hasAnswer = false;
+                    foreach (var answer in question.RightAnswer.Ids)
+                    {
+                        if (answer == (byte)1)
+                            hasAnswer = true;
+                    }
+
+                    if (!hasAnswer)
+                    {
+                        flag = false;
+                        OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
+                    }
+                    break;
             }
 
             for (int j = 0; j < question.Answers.Count; j++)
@@ -389,8 +453,17 @@ public class QuizEditor : MonoBehaviour, IForm
                 question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text =
                     t.Answers[j];
                 // TODO: поддержка разных типов вопросов
-                if (j == t.RightAnswer.Id)
-                    question.answers[j].GetComponent<Toggle>().isOn = true;
+                switch (t.Type)
+                {
+                    case QuizQuestionType.Default:
+                    case QuizQuestionType.TrueOrFalse:
+                        question.answers[j].GetComponent<Toggle>().isOn = true;
+                        break;
+                    case QuizQuestionType.Multiple:
+                        if (t.RightAnswer.Ids[j] == 1)
+                            question.answers[j].GetComponent<Toggle>().isOn = true;
+                        break;
+                }
             }
         }
     }
