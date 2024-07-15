@@ -38,6 +38,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
         public GameObject continueButton;
         public Transform answersLayout;
         public GameObject answerPrefab;
+        public GameObject inputfieldAnswer;
 
         public GameObject submitAnswersButton;
     }
@@ -72,6 +73,20 @@ public class AnswerQuestion : MonoBehaviour, IForm
         currentQuestion.RightAnswer = new QuizAnswer();
         currentQuestion.RightAnswer.Ids = new byte[4];
         currentQuestion.RightAnswer.Type = currentQuestion.Type;
+
+        switch (currentQuestion.Type)
+        {
+            case QuizQuestionType.Multiple:
+            case QuizQuestionType.TrueOrFalse:
+            case QuizQuestionType.Default:
+                form.inputfieldAnswer.SetActive(false);
+                form.answersLayout.gameObject.SetActive(true);
+                break;
+            case QuizQuestionType.Input:
+                form.inputfieldAnswer.SetActive(true);
+                form.answersLayout.gameObject.SetActive(false);
+                break;
+        }
         
         form.questionText.text = currentQuestion.Question;
         form.questionImage.texture = currentQuestion.Image.GetTexture();
@@ -140,8 +155,12 @@ public class AnswerQuestion : MonoBehaviour, IForm
 
     public void SubmitAnswer()
     {
-        if (currentQuestion.Type == QuizQuestionType.Multiple)
-            LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = currentQuestion.RightAnswer });
+        if (currentQuestion.Type == QuizQuestionType.Input)
+        {
+            currentQuestion.RightAnswer.Input = form.inputfieldAnswer.transform.GetComponent<TMP_InputField>().text;
+        }
+
+        LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = currentQuestion.RightAnswer });
     }
 
     public void SetAnswerChecked(int index, bool isChecked)
