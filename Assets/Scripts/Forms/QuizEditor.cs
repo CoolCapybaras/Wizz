@@ -28,6 +28,7 @@ public class QuizEditor : MonoBehaviour, IForm
         public GameObject questionPrefab;
         public GameObject defaultAnswerPrefab;
         public GameObject trueFalseAnswerPrefab;
+        public GameObject inputAnswerPrefab;
 
         public Transform hashtagsLayout;
         public GameObject hashtagsPrefab;
@@ -85,6 +86,7 @@ public class QuizEditor : MonoBehaviour, IForm
             quiz.Questions[i].RightAnswer.Type = type;
             quiz.Questions[i].Type = type;
             
+            
             for (int m = 0; m < questions[i].answers.Count; m++)
             {
                 switch (type)
@@ -117,6 +119,9 @@ public class QuizEditor : MonoBehaviour, IForm
             case QuizQuestionType.TrueOrFalse:
                 iterLimit = 2;
                 break;
+            case QuizQuestionType.Input:
+                iterLimit = 1;
+                break;
         }
         
         for (int j = 0; j < iterLimit; ++j)
@@ -130,6 +135,9 @@ public class QuizEditor : MonoBehaviour, IForm
                     break;
                 case QuizQuestionType.Multiple:
                     answerPrefab = form.defaultAnswerPrefab;
+                    break;
+                case QuizQuestionType.Input:
+                    answerPrefab = form.inputAnswerPrefab;
                     break;
             }
             
@@ -206,8 +214,13 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void OnAnswerValueChanged(int index, int answerIndex)
     {
-        quiz.Questions[answerIndex].Answers[index] =
-            questions[answerIndex].answers[index].transform.GetChild(1).GetComponent<TMP_InputField>().text;
+        if(quiz.Questions[answerIndex].Type == QuizQuestionType.Input)
+            SetCorrectAnswerOnInputQuestion(index, answerIndex);
+        else
+        {
+            quiz.Questions[answerIndex].Answers[index] =
+                questions[answerIndex].answers[index].transform.GetChild(1).GetComponent<TMP_InputField>().text;
+        }
     }
     
     public void OnTogglePressed(int index, int answerIndex)
@@ -250,6 +263,13 @@ public class QuizEditor : MonoBehaviour, IForm
         var toggle = questions[answerIndex].answers[index].GetComponent<Toggle>();
         
         quiz.Questions[answerIndex].RightAnswer.Ids[index] = toggle.isOn ? (byte)1 : (byte)0;
+    }
+
+    private void SetCorrectAnswerOnInputQuestion(int index, int answerIndex)
+    {
+        var inputField = questions[answerIndex].answers[index].transform.GetChild(1).GetComponent<TMP_InputField>();
+
+        quiz.Questions[answerIndex].RightAnswer.Input = inputField.text;
     }
     
     public void OnTimeValueChanged(int answerIndex)
@@ -384,14 +404,25 @@ public class QuizEditor : MonoBehaviour, IForm
                         OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
                     }
                     break;
+                case QuizQuestionType.Input:
+                    if (string.IsNullOrEmpty(question.RightAnswer.Input))
+                    {
+                        flag = false;
+                        OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан верный ответ", InfoType.Error);
+                    }
+                    break;
             }
 
-            for (int j = 0; j < question.Answers.Count; j++)
+            if (question.Type != QuizQuestionType.Input)
             {
-                if (string.IsNullOrEmpty(question.Answers[j]))
+                for (int j = 0; j < question.Answers.Count; j++)
                 {
-                    flag = false;
-                    OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан {j + 1} вариант ответа", InfoType.Error);
+                    if (string.IsNullOrEmpty(question.Answers[j]))
+                    {
+                        flag = false;
+                        OverlayManager.Instance.ShowInfo($"Вопрос {i + 1}: не указан {j + 1} вариант ответа",
+                            InfoType.Error);
+                    }
                 }
             }
         }
@@ -462,6 +493,9 @@ public class QuizEditor : MonoBehaviour, IForm
                     case QuizQuestionType.Multiple:
                         if (t.RightAnswer.Ids[j] == 1)
                             question.answers[j].GetComponent<Toggle>().isOn = true;
+                        break;
+                    case QuizQuestionType.Input:
+                        question.answers[j].GetComponent<TMP_InputField>().text = t.RightAnswer.Input;
                         break;
                 }
             }

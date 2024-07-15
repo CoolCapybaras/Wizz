@@ -86,6 +86,10 @@ public class QuizQuestionForm : MonoBehaviour, IForm
                 form.questionTypeText.text = "Множественный выбор";
                 // TODO: sprite
                 break;
+            case QuizQuestionType.Input:
+                form.questionTypeText.text = "Ввод ответа";
+                // TODO: sprite
+                break;
         }
     }
 

@@ -1,4 +1,6 @@
-﻿public class QuizAnswer
+﻿using System;
+
+public class QuizAnswer
 {
 	public QuizQuestionType Type { get; set; }
 	public int Id { get; set; }
@@ -50,6 +52,6 @@
 			return true;
 		}
 		
-		return Input == answer.Input;
+		return string.Compare(Input, answer.Input, StringComparison.OrdinalIgnoreCase) == 0;
 	}
 }
