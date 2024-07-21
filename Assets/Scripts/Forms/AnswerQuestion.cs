@@ -158,6 +158,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
         if (currentQuestion.Type == QuizQuestionType.Input)
         {
             currentQuestion.RightAnswer.Input = form.inputfieldAnswer.transform.GetComponent<TMP_InputField>().text;
+            form.inputfieldAnswer.transform.GetComponent<TMP_InputField>().text = string.Empty;
         }
 
         LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = currentQuestion.RightAnswer });
