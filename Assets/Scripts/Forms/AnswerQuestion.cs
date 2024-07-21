@@ -40,6 +40,10 @@ public class AnswerQuestion : MonoBehaviour, IForm
         public GameObject answerPrefab;
         public GameObject inputfieldAnswer;
 
+        public GameObject matchAnswerObj;
+        public GameObject[] termsObjects;
+        public GameObject[] definitionObjects;
+
         public GameObject submitAnswersButton;
     }
 

@@ -29,6 +29,7 @@ public class QuizEditor : MonoBehaviour, IForm
         public GameObject defaultAnswerPrefab;
         public GameObject trueFalseAnswerPrefab;
         public GameObject inputAnswerPrefab;
+        public GameObject matchAnswerPrefab;
 
         public Transform hashtagsLayout;
         public GameObject hashtagsPrefab;
@@ -63,6 +64,9 @@ public class QuizEditor : MonoBehaviour, IForm
     {
         var obj = Instantiate(form.questionPrefab, form.questionsLayout);
         
+        obj.GetComponent<QuizEditorQuestionHelper>().expandedSize =
+            type == QuizQuestionType.Match ? new(1600, 850) : new(1600, 500);
+        
         questions.Add(new Question
         {
             obj = obj,
@@ -82,7 +86,10 @@ public class QuizEditor : MonoBehaviour, IForm
             quiz.Questions[i].RightAnswer = new();
             quiz.Questions[i].Answers = new List<string>();
             quiz.Questions[i].RightAnswer.Id = -1;
-            quiz.Questions[i].RightAnswer.Ids = new byte[4];
+
+            quiz.Questions[i].RightAnswer.Ids = 
+                type == QuizQuestionType.Match ? new byte[] { 0, 1, 2, 3 } : new byte[4];
+            
             quiz.Questions[i].RightAnswer.Type = type;
             quiz.Questions[i].Type = type;
             
@@ -97,6 +104,9 @@ public class QuizEditor : MonoBehaviour, IForm
                         break;
                     case QuizQuestionType.TrueOrFalse:
                         quiz.Questions[i].Answers.Add(m == 0 ? "Правда" : "Ложь");
+                        break;
+                    case QuizQuestionType.Match:
+                        quiz.Questions[i].Answers.AddRange(new []{string.Empty, string.Empty});
                         break;
                 }
             }
@@ -139,6 +149,9 @@ public class QuizEditor : MonoBehaviour, IForm
                 case QuizQuestionType.Input:
                     answerPrefab = form.inputAnswerPrefab;
                     break;
+                case QuizQuestionType.Match:
+                    answerPrefab = form.matchAnswerPrefab;
+                    break;
             }
             
             var answerObj = Instantiate(answerPrefab, parent);
@@ -148,6 +161,9 @@ public class QuizEditor : MonoBehaviour, IForm
             
             if (type == QuizQuestionType.TrueOrFalse)
                 answerObj.transform.GetChild(1).GetComponent<TMP_InputField>().text = j == 0 ? "Правда" : "Ложь";
+
+            if (type == QuizQuestionType.Match)
+                answerObj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = $"{j + 1}.";
         }
 
         return answers;
@@ -214,8 +230,10 @@ public class QuizEditor : MonoBehaviour, IForm
 
     public void OnAnswerValueChanged(int index, int answerIndex)
     {
-        if(quiz.Questions[answerIndex].Type == QuizQuestionType.Input)
+        if (quiz.Questions[answerIndex].Type == QuizQuestionType.Input)
             SetCorrectAnswerOnInputQuestion(index, answerIndex);
+        else if (quiz.Questions[answerIndex].Type == QuizQuestionType.Match)
+            SetCorrectAnswerOnMatchQuestion(index, answerIndex);
         else
         {
             quiz.Questions[answerIndex].Answers[index] =
@@ -256,6 +274,14 @@ public class QuizEditor : MonoBehaviour, IForm
             quiz.Questions[answerIndex].RightAnswer.Id = -1;
         }
         quiz.Questions[answerIndex].RightAnswer.Id = index;
+    }
+
+    private void SetCorrectAnswerOnMatchQuestion(int index, int answerIndex)
+    {
+        quiz.Questions[answerIndex].Answers[index] = questions[answerIndex].answers[index].transform.GetChild(0)
+            .GetComponent<TMP_InputField>().text;
+        quiz.Questions[answerIndex].Answers[index + 4] = questions[answerIndex].answers[index].transform.GetChild(1)
+            .GetComponent<TMP_InputField>().text;
     }
 
     private void SetCorrectAnswerOnMultipleQuestion(int index, int answerIndex)
@@ -481,9 +507,8 @@ public class QuizEditor : MonoBehaviour, IForm
             question.image.texture = t.Image.GetTexture();
             for (int j = 0; j < question.answers.Count; ++j)
             {
-                if(t.Type != QuizQuestionType.Input)
+                if (t.Type is not QuizQuestionType.Input and not QuizQuestionType.Match)
                     question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.Answers[j];
-                // TODO: поддержка разных типов вопросов
                 switch (t.Type)
                 {
                     case QuizQuestionType.Default:
@@ -496,6 +521,21 @@ public class QuizEditor : MonoBehaviour, IForm
                         break;
                     case QuizQuestionType.Input:
                         question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.RightAnswer.Input;
+                        break;
+                    case QuizQuestionType.Match:
+                        var inputField1 = question.answers[j].transform.GetChild(0).GetComponent<TMP_InputField>();
+                        var inputField1Action = inputField1.onValueChanged;
+                        inputField1.onValueChanged = null;
+                        
+                        var inputField2 = question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>();
+                        var inputField2Action = inputField2.onValueChanged;
+                        inputField2.onValueChanged = null;
+                        
+                        question.answers[j].transform.GetChild(0).GetComponent<TMP_InputField>().text = t.Answers[j];
+                        question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.Answers[j + 4];
+
+                        inputField1.onValueChanged = inputField1Action;
+                        inputField2.onValueChanged = inputField2Action;
                         break;
                 }
             }
