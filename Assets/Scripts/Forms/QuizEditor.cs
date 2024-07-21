@@ -481,8 +481,9 @@ public class QuizEditor : MonoBehaviour, IForm
             question.image.texture = t.Image.GetTexture();
             for (int j = 0; j < question.answers.Count; ++j)
             {
-                question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text =
-                    t.Answers[j];
+                question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.Type == QuizQuestionType.Input 
+                    ? t.RightAnswer.Input
+                    : t.Answers[j];
                 // TODO: поддержка разных типов вопросов
                 switch (t.Type)
                 {
@@ -495,7 +496,7 @@ public class QuizEditor : MonoBehaviour, IForm
                             question.answers[j].GetComponent<Toggle>().isOn = true;
                         break;
                     case QuizQuestionType.Input:
-                        question.answers[j].GetComponent<TMP_InputField>().text = t.RightAnswer.Input;
+                        question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.RightAnswer.Input;
                         break;
                 }
             }
