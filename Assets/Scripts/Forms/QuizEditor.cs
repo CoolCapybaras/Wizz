@@ -481,9 +481,8 @@ public class QuizEditor : MonoBehaviour, IForm
             question.image.texture = t.Image.GetTexture();
             for (int j = 0; j < question.answers.Count; ++j)
             {
-                question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.Type == QuizQuestionType.Input 
-                    ? t.RightAnswer.Input
-                    : t.Answers[j];
+                if(t.Type != QuizQuestionType.Input)
+                    question.answers[j].transform.GetChild(1).GetComponent<TMP_InputField>().text = t.Answers[j];
                 // TODO: поддержка разных типов вопросов
                 switch (t.Type)
                 {
