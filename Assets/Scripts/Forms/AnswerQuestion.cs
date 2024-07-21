@@ -136,6 +136,9 @@ public class AnswerQuestion : MonoBehaviour, IForm
                 currentQuestion.RightAnswer.Id = index;
                 var answer = new QuizAnswer();
                 answer.Id = currentQuestion.RightAnswer.Id;
+                answer.Type = currentQuestion.Type == QuizQuestionType.TrueOrFalse
+                    ? QuizQuestionType.TrueOrFalse
+                    : QuizQuestionType.Default;
                 LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = answer});
                 break;
             case QuizQuestionType.Multiple:
