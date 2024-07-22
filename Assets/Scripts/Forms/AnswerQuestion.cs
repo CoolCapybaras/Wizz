@@ -41,6 +41,7 @@ public class AnswerQuestion : MonoBehaviour, IForm
         public GameObject inputfieldAnswer;
 
         public GameObject matchAnswerObj;
+        public Transform definitionTransform;
         public GameObject[] termsObjects;
         public GameObject[] definitionObjects;
 
@@ -77,28 +78,48 @@ public class AnswerQuestion : MonoBehaviour, IForm
         currentQuestion.RightAnswer = new QuizAnswer();
         currentQuestion.RightAnswer.Ids = new byte[4];
         currentQuestion.RightAnswer.Type = currentQuestion.Type;
-
+        
+        form.inputfieldAnswer.SetActive(false);
+        form.matchAnswerObj.SetActive(false);
+        form.answersLayout.gameObject.SetActive(false);
+        
         switch (currentQuestion.Type)
         {
             case QuizQuestionType.Multiple:
             case QuizQuestionType.TrueOrFalse:
             case QuizQuestionType.Default:
-                form.inputfieldAnswer.SetActive(false);
                 form.answersLayout.gameObject.SetActive(true);
                 break;
             case QuizQuestionType.Input:
                 form.inputfieldAnswer.SetActive(true);
-                form.answersLayout.gameObject.SetActive(false);
+                break;
+            case QuizQuestionType.Match:
+                form.matchAnswerObj.SetActive(true);
+                foreach (var obj in form.definitionObjects)
+                    obj.transform.SetSiblingIndex(obj.GetComponent<AnswerMatchDragController>().answerIndex);
                 break;
         }
         
         form.questionText.text = currentQuestion.Question;
         form.questionImage.texture = currentQuestion.Image.GetTexture();
-        DestroyLayoutChildren(form.answersLayout);
-        for (int i = 0; i < currentQuestion.Answers.Count; ++i)
+        if (currentQuestion.Type == QuizQuestionType.Match)
         {
-            var answer = currentQuestion.Answers[i];
-            form.answerButtons[i].obj = InstantiateAnswerButton(form.answerButtons[i].defaultColor, answer, i);
+            for (int i = 0; i < form.definitionObjects.Length; ++i)
+            {
+                form.termsObjects[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                    currentQuestion.Answers[i];
+                form.definitionObjects[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                    currentQuestion.Answers[i + 4];
+            }
+        }
+        else
+        {
+            DestroyLayoutChildren(form.answersLayout);
+            for (int i = 0; i < currentQuestion.Answers.Count; ++i)
+            {
+                var answer = currentQuestion.Answers[i];
+                form.answerButtons[i].obj = InstantiateAnswerButton(form.answerButtons[i].defaultColor, answer, i);
+            }
         }
         
         if (currentQuestion.Type == QuizQuestionType.Multiple)
@@ -166,6 +187,16 @@ public class AnswerQuestion : MonoBehaviour, IForm
         {
             currentQuestion.RightAnswer.Input = form.inputfieldAnswer.transform.GetComponent<TMP_InputField>().text;
             form.inputfieldAnswer.transform.GetComponent<TMP_InputField>().text = string.Empty;
+        }
+
+        if (currentQuestion.Type == QuizQuestionType.Match)
+        {
+            for (int i = 0; i < form.definitionTransform.childCount; ++i)
+            {
+                currentQuestion.RightAnswer.Ids[i] = (byte)form.definitionTransform.GetChild(i).gameObject
+                    .GetComponent<AnswerMatchDragController>()
+                    .answerIndex;
+            }
         }
 
         LocalClient.instance.SendPacket(new AnswerGamePacket { Answer = currentQuestion.RightAnswer });

@@ -22,12 +22,8 @@ public class AnswerMatchDragController : MonoBehaviour, IPointerDownHandler, IDr
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,
-                eventData.position, Camera.main, out var localPoint))
-        { // TODO: поправить всё это дело
-            rectTransform.anchoredPosition =
-                new Vector3(rectTransform.anchoredPosition.x, localPoint.y, 0);
-        }
+        transform.localPosition =
+            new Vector3(transform.localPosition.x, eventData.position.y - 337, 0);
         for (int i = 0; i < totalChild; i++)
         {
             if (i != transform.GetSiblingIndex())
