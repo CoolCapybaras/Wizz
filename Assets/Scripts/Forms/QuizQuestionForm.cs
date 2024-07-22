@@ -90,6 +90,10 @@ public class QuizQuestionForm : MonoBehaviour, IForm
                 form.questionTypeText.text = "Ввод ответа";
                 // TODO: sprite
                 break;
+            case QuizQuestionType.Match:
+                form.questionTypeText.text = "На сопоставление";
+                // TODO: sprite
+            break;
         }
     }
 
