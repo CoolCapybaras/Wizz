@@ -513,7 +513,8 @@ public class QuizEditor : MonoBehaviour, IForm
                 {
                     case QuizQuestionType.Default:
                     case QuizQuestionType.TrueOrFalse:
-                        question.answers[j].GetComponent<Toggle>().isOn = true;
+                        if(t.RightAnswer.Id == j)
+                            question.answers[j].GetComponent<Toggle>().isOn = true;
                         break;
                     case QuizQuestionType.Multiple:
                         if (t.RightAnswer.Ids[j] == 1)
